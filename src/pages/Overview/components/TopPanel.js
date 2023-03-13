@@ -1,4 +1,13 @@
 
+const data = [
+    { name: '可爱多', num: '9,086' },
+    { name: '娃哈哈', num: '8,341' },
+    { name: '喜之郎', num: '7,407' },
+    { name: '八喜', num: '6,080' },
+    { name: '小洋人', num: '6,724' },
+    { name: '好多鱼', num: '2,170' },
+]
+
 const TopPanel = (props) => {
     return <div className="top panel">
     <div className="inner">
@@ -42,12 +51,14 @@ const TopPanel = (props) => {
                     </li>
                 </ul>
                 <ul className="sub">
-                    <li><span>数据</span><span> 数据<s className="icon-up"></s></span></li>
-                    <li><span>数据</span><span> 数据<s className="icon-up"></s></span></li>
-                    <li><span>数据</span><span> 数据<s className="icon-up"></s></span></li>
-                    <li><span>数据</span><span> 数据<s className="icon-up"></s></span></li>
-                    <li><span>数据</span><span> 数据<s className="icon-up"></s></span></li>
-                    <li><span>数据</span><span> 数据<s className="icon-up"></s></span></li>
+                    {
+                        data.map(item => {
+                            return <li key={item.name}>
+                                <span>{item.name}</span>
+                                <span>{item.num}<s className="icon-up"></s></span>
+                            </li>
+                        })
+                    }
                 </ul>
             </div>
         </div>

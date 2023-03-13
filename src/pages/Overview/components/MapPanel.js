@@ -3,9 +3,9 @@ import { useRef, useEffect } from 'react';
 
 import '../config/china'
 
-import { geoCoordMap, BJData, SHData, GZData, planePath } from '../config/index'
+import { geoCoordMap, BJData, SHData, GZData, planePath } from '../config/mapData'
 
-var convertData = function(data) {
+const convertData = (data) => {
     var res = [];
     for (var i = 0; i < data.length; i++) {
         var dataItem = data[i];
