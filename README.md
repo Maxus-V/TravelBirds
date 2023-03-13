@@ -71,8 +71,6 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 ## Desktop Preview (效果预览)
 ### PC端
-https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/1-1.gif
 ![1-1](https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/1-1.gif) 
 ### 桌面端
-https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/1-2.gif
 ![1-2](https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/1-2.gif) 

@@ -10,8 +10,8 @@ const {app, BrowserWindow, nativeImage} = require('electron');
 // 添加一个createWindow()方法来将index.html加载进一个新的BrowserWindow实例。
 const createWindow = () => {
   let win = new BrowserWindow({
-    width: 800,// 窗口宽度
-    height: 600, // 窗口高度
+    width: 1080,// 窗口宽度
+    height: 1080, // 窗口高度
     title: '随风飘飘游', // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
     icon: nativeImage.createFromPath('src/public/favicon.ico'),
