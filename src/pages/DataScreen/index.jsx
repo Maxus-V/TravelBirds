@@ -16,8 +16,8 @@ import "./index.less"
 
 const DataScreen = () => {
 	const dataScreenRef = useRef(null)
-	const [onMusic, setOnMusic] = useAudio('https://other-web-rg01-sycdn.kuwo.cn/93f7cdf7bdda7955d9afdcb2ed418b23/64129c81/resource/n1/93/54/2340833122.mp3')
-	// const [onMusic, setOnMusic] = useAudio('https://other-web-nf01-sycdn.kuwo.cn/f05cbdae3f3468021083892596dff3e7/64129635/resource/n3/73/85/355960088.mp3')
+	// const [onMusic, setOnMusic] = useAudio('https://other-web-rg01-sycdn.kuwo.cn/93f7cdf7bdda7955d9afdcb2ed418b23/64129c81/resource/n1/93/54/2340833122.mp3')
+	const [onMusic, setOnMusic] = useAudio('https://other-web-nf01-sycdn.kuwo.cn/f05cbdae3f3468021083892596dff3e7/64129635/resource/n3/73/85/355960088.mp3')
     
 	/* 开启或关闭页面背景音乐 */
 	const handleTo = () => {
