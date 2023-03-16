@@ -177,13 +177,13 @@ const RealTimeAccessChart = () => {
 			}
 		]
 	};
-	const [echartsRef] = useEchart(option, data);
-	const [actualTotal] = useState("216908");
+	const [echartsRef] = useEchart(option, data)
+	const [actualTotal] = useState("233888")
 	return (
 		<>
 			<div className="actual-total">
 				<div className="expect-total">
-					可预约总量<i>999999</i>人
+					已登记游客<i>120003</i>人
 				</div>
 				<div className="actual-total">
 					{actualTotal.split("").map((item, index) => {

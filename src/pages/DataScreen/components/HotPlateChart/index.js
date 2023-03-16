@@ -6,31 +6,31 @@ const HotPlateChart = () => {
 	let data = [
 		{
 			value: 79999,
-			name: "峨眉山",
+			name: "西双版纳",
 			percentage: "80%",
 			maxValue: 100000
 		},
 		{
 			value: 59999,
-			name: "稻城亚丁",
+			name: "拉萨",
 			percentage: "60%",
 			maxValue: 100000
 		},
 		{
 			value: 49999,
-			name: "九寨沟",
+			name: "呼尔浩特",
 			percentage: "50%",
 			maxValue: 100000
 		},
 		{
 			value: 39999,
-			name: "万里长城",
+			name: "敦煌",
 			percentage: "40%",
 			maxValue: 100000
 		},
 		{
 			value: 29999,
-			name: "北京故宫",
+			name: "雅鲁藏布",
 			percentage: "30%",
 			maxValue: 100000
 		}

@@ -4,7 +4,7 @@ const PlatformSourceChart = () => {
 	let data = [
 		{
 			value: 40,
-			name: "智慧文旅平台",
+			name: "随风飘飘游",
 			percentage: "40%"
 		},
 		{

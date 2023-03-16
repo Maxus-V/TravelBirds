@@ -1,9 +1,9 @@
-import * as echarts from "echarts"
 import { useEffect, useRef } from "react"
+import * as echarts from "echarts"
 /**
  * @description 使用Echarts
- * @param {Element} data 数据 
  * @param {Object} options 绘制Echarts的参数(必传)
+ * @param {Element} data 数据
  * @return chart
  * */
 export const useEchart = (options, data) => {
@@ -29,6 +29,8 @@ export const useEchart = (options, data) => {
 		return () => {
 			window.removeEventListener("resize", echartsResize)
 			myChart?.current?.dispose()
+			//[ECharts] Instance ec_xxx has been disposed 的解决方法
+			myChart.current = null
 		}
 	}, [])
 

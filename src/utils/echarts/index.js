@@ -25,7 +25,6 @@ import {
 import { LabelLayout, UniversalTransition } from "echarts/features";
 import { CanvasRenderer } from "echarts/renderers";
 
-
 // 注册必须的组件
 echarts.use([
 	LegendComponent,
@@ -38,7 +37,7 @@ echarts.use([
 	LineChart,
 	LabelLayout,
 	UniversalTransition,
-	CanvasRenderer
+	CanvasRenderer,
 ]);
 
 export default echarts;

@@ -220,7 +220,7 @@ const ChinaMapChart = () => {
 	return (
 		<div className="content-box">
 			<div className="map-ball"></div>
-			<div ref={echartsRef} className="echarts"></div>
+			<div style={{height: '80vh'}} ref={echartsRef} className="echarts"></div>
 		</div>
 	);
 };

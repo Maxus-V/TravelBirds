@@ -1,27 +1,28 @@
 import { useLayoutEffect, useRef } from "react"
-// import { useNavigate } from "react-router-dom";
-// import { HOME_URL } from "@/config/config";
 
 import Headertime from "./components/DataHeaderTime"
 import RealTimeAccessChart from "./components/RealTimeAccessChart"
 import MaleFemaleRatioChart from "./components/MaleFemaleRatioChart"
 import AgeRatioChart from "./components/AgeRatioChart"
-// import ChinaMapChart from "./components/ChinaMapChart"
+import ChinaMapChart from "./components/ChinaMapChart"
 import OverNext30Chart from "./components/OverNext30Chart"
 import HotPlateChart from "./components/HotPlateChart"
 import AnnualUseChart from "./components/AnnualUseChart"
 import PlatformSourceChart from "./components/PlatformSourceChart"
 
+import { useAudio } from "@/hooks/useAudio"
 import dataScreenTitle from "./images/dataScreen-title.png"
 import "./index.less"
 
 const DataScreen = () => {
-    const handleTo = () => {
-		
-	};
-
-
-    const dataScreenRef = useRef(null)
+	const dataScreenRef = useRef(null)
+	const [onMusic, setOnMusic] = useAudio('https://other-web-rg01-sycdn.kuwo.cn/93f7cdf7bdda7955d9afdcb2ed418b23/64129c81/resource/n1/93/54/2340833122.mp3')
+	// const [onMusic, setOnMusic] = useAudio('https://other-web-nf01-sycdn.kuwo.cn/f05cbdae3f3468021083892596dff3e7/64129635/resource/n3/73/85/355960088.mp3')
+    
+	/* 开启或关闭页面背景音乐 */
+	const handleTo = () => {
+		setOnMusic(pre => !pre)
+	}
 
     /* 浏览器监听 resize 事件 */
 	const resize = () => {
@@ -55,14 +56,17 @@ const DataScreen = () => {
 			<div className="dataScreen" ref={dataScreenRef}>
 				<div className="dataScreen-header">
 					<div className="header-lf">
+						<span className="header-playing">
+							{onMusic ? '正在播放：直到世界尽头' : null}
+						</span>
 						<span className="header-screening" onClick={handleTo}>
-							首页
+							{onMusic ? '关闭' : '开启'}音乐
 						</span>
 					</div>
 					<div className="header-ct">
 						<div className="header-ct-title">
 							<span>随风飘飘游</span>
-							<div className="header-ct-warning">平台高峰预警信息（2条）</div>
+							{/* <div className="header-ct-warning">平台高峰预警信息（2条）</div> */}
 						</div>
 					</div>
 					<div className="header-rg">
@@ -102,8 +106,8 @@ const DataScreen = () => {
 					</div>
 					<div className="dataScreen-ct">
 						<div className="dataScreen-map">
-							<div className="dataScreen-map-title">景区实时客流量</div>
-							{/* <ChinaMapChart /> */}
+							<div className="dataScreen-map-title">旅游航线实时监测</div>
+							<ChinaMapChart />
 						</div>
 						<div className="dataScreen-cb">
 							<div className="dataScreen-main-title">
