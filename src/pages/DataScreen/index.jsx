@@ -11,13 +11,14 @@ import AnnualUseChart from "./components/AnnualUseChart"
 import PlatformSourceChart from "./components/PlatformSourceChart"
 
 import { useAudio } from "@/hooks/useAudio"
+import music from './assets/2516694153.mp3'
 import dataScreenTitle from "./images/dataScreen-title.png"
+
 import "./index.less"
 
 const DataScreen = () => {
 	const dataScreenRef = useRef(null)
-	// const [onMusic, setOnMusic] = useAudio('https://other-web-rg01-sycdn.kuwo.cn/93f7cdf7bdda7955d9afdcb2ed418b23/64129c81/resource/n1/93/54/2340833122.mp3')
-	const [onMusic, setOnMusic] = useAudio('https://other-web-nf01-sycdn.kuwo.cn/f05cbdae3f3468021083892596dff3e7/64129635/resource/n3/73/85/355960088.mp3')
+	const [onMusic, setOnMusic] = useAudio(music)
     
 	/* 开启或关闭页面背景音乐 */
 	const handleTo = () => {
@@ -57,7 +58,7 @@ const DataScreen = () => {
 				<div className="dataScreen-header">
 					<div className="header-lf">
 						<span className="header-playing">
-							{onMusic ? '正在播放：直到世界尽头' : null}
+							{onMusic ? '~ 正在播放：直到世界尽头 ~' : null}
 						</span>
 						<span className="header-screening" onClick={handleTo}>
 							{onMusic ? '关闭' : '开启'}音乐

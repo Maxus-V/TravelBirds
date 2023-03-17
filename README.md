@@ -1,8 +1,16 @@
-# Geo-React-Electon (travelBirds) 🐦
+# TravelBirds 🐦🐦🐦
 
 ### 介绍 📖
 
-✨✨✨ Geo-React-Electron，基于React、React-Hooks、Webpack、Electron 的一个地理信息应用。
+✨✨✨ TravelBirds，以 React、Electron 为基础，可持续扩展前端技术栈的一个数据可视化应用。
+
+### 项目功能 🔨🔨🔨
+
+- 🚀 采用最新技术找开发：React18、React-Router v6、React-Hooks、TypeScript、Webpack
+- 🚀 整个项目还集成了 Electron、Echarts、Ant Design
+- 🚀 基于Audio实现音乐单曲循环播放功能，用户可自行选择开启或关闭
+- 🚀 支持 YouSheBiaoTiHei 和 MetroDF 等外接字体
+- 🚀 支持 SVG 动画
 
 ### 安装使用步骤 📑
 
