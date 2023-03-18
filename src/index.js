@@ -5,10 +5,21 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import "@/assets/fonts/font.less";
 
+import { PersistGate } from "redux-persist/integration/react";
+import { Provider } from "react-redux";
+import { store, persistor } from "@/redux";
+import "@/language/index";
+import "@/styles/common.less";
+import "@/styles/reset.less";
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <App />
+      </PersistGate>
+    </Provider>
   </React.StrictMode>
 );
 

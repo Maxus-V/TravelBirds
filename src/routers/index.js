@@ -1,5 +1,7 @@
+import React from "react"
 import { Navigate, useRoutes } from "react-router-dom"
 import Login from "@/pages/Login"
+import lazyLoad from "@/routers/utils/lazyLoad"
 
 import Error from './modules/error'
 
@@ -19,6 +21,15 @@ export const rootRouter = [
 			requiresAuth: false,
 			title: "登录页",
 			key: "login"
+		}
+	},
+	{
+		path: "/datascreen/index",
+		element: lazyLoad(React.lazy(() => import("@/pages/DataScreen/index"))),
+		meta: {
+			requiresAuth: true,
+			title: "随风飘飘游",
+			key: "datascreen"
 		}
 	},
 	...routerArray,

@@ -10,7 +10,7 @@
 - 🚀 整个项目还集成了 Electron、Echarts、Ant Design
 - 🚀 基于Audio实现音乐单曲循环播放功能，用户可自行选择开启或关闭
 - 🚀 支持 YouSheBiaoTiHei 和 MetroDF 等外接字体
-- 🚀 支持 SVG 动画
+- 🚀 SVG 动画，黑夜模式，国际化 在 React 中应用的最佳实践
 
 ### 安装使用步骤 📑
 

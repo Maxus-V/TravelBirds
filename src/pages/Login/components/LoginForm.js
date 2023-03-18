@@ -7,8 +7,19 @@ import { useTranslation } from "react-i18next"
 
 import md5 from "js-md5"
 
+import { useNavigate } from "react-router-dom"
+import { loginApi } from "@/api/modules/login"
+
+import { HOME_URL } from "@/config"
+
+import { setToken } from "@/redux/modules/global/action"
+
+import { connect } from "react-redux"
+
 const LoginForm = (props) => {
 	const { t } = useTranslation()
+	const { setToken } = props
+	const navigate = useNavigate()
     const [form] = Form.useForm()
     const [loading, setLoading] = useState(false)
 
@@ -16,11 +27,18 @@ const LoginForm = (props) => {
 		try {
 			setLoading(true);
 			loginForm.password = md5(loginForm.password)
+			const { data } = await loginApi(loginForm)
+			setToken(data?.access_token)
 			message.success("登录成功！")
+			navigate(HOME_URL)
 		} finally {
 			setLoading(false)
 		}
-	};
+	}
+
+	const onFinishFailed = (errorInfo) => {
+		console.log("Failed:", errorInfo)
+	}
     return (
         <Form
 			form={form}
@@ -28,6 +46,7 @@ const LoginForm = (props) => {
 			labelCol={{ span: 5 }}
 			initialValues={{ remember: true }}
 			onFinish={onFinish}
+			onFinishFailed={onFinishFailed}
 			size="large"
 			autoComplete="off"
 		>
@@ -40,7 +59,7 @@ const LoginForm = (props) => {
 			<Form.Item className="login-btn">
 				<Button
 					onClick={() => {
-						form.resetFields();
+						form.resetFields()
 					}}
 					icon={<CloseCircleOutlined />}
 				>
@@ -54,4 +73,5 @@ const LoginForm = (props) => {
     )
 }
 
-export default LoginForm
+const mapDispatchToProps = { setToken }
+export default connect(null, mapDispatchToProps)(LoginForm)
