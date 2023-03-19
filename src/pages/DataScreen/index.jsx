@@ -10,15 +10,30 @@ import HotPlateChart from "./components/HotPlateChart"
 import AnnualUseChart from "./components/AnnualUseChart"
 import PlatformSourceChart from "./components/PlatformSourceChart"
 
+import { message } from "antd"
+import { useNavigate } from "react-router-dom"
+import { connect } from "react-redux"
+import { setToken } from "@/redux/modules/global/action"
+
 import { useAudio } from "@/hooks/useAudio"
 import music from './assets/2516694153.mp3'
 import dataScreenTitle from "./images/dataScreen-title.png"
 
 import "./index.less"
 
-const DataScreen = () => {
+const DataScreen = (props) => {
+	const { setToken } = props
+	const navigate = useNavigate()
+
 	const dataScreenRef = useRef(null)
 	const [onMusic, setOnMusic] = useAudio(music)
+
+	/* 退出登录 */
+	const logout = () => {
+		setToken("")
+		message.success("退出登录成功！")
+		navigate("/login")
+	}
     
 	/* 开启或关闭页面背景音乐 */
 	const handleTo = () => {
@@ -71,7 +86,7 @@ const DataScreen = () => {
 						</div>
 					</div>
 					<div className="header-rg">
-						<span className="header-download">统计报告</span>
+						<span className="header-download" onClick={logout}>退出登录</span>
 						<Headertime />
 					</div>
 				</div>
@@ -152,7 +167,8 @@ const DataScreen = () => {
 				</div>
 			</div>
 		</div>
-	);
-};
+	)
+}
 
-export default DataScreen;
+const mapDispatchToProps = { setToken }
+export default connect(null, mapDispatchToProps)(DataScreen)

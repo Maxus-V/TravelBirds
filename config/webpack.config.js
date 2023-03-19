@@ -776,6 +776,15 @@ module.exports = function (webpackEnv) {
           },
         }),
     ].filter(Boolean),
+    // devServer: {
+    //   proxy: {
+    //     "/api": {
+		// 			target: "https://mock.mengxuegu.com/mock/62abda3212c1416424630a45", // easymock
+		// 			changeOrigin: true,
+		// 			pathRewrite: path => path.replace(/^\/api/, ""),
+		// 		}
+    //   }
+    // },
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter
     performance: false,

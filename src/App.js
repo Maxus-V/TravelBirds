@@ -2,9 +2,6 @@ import { useState, useEffect } from 'react'
 
 import './App.css'
 
-// import Overview from './pages/Overview'
-import DataScreen from './pages/DataScreen'
-import Login from './pages/Login'
 import { HashRouter } from "react-router-dom"
 import Router from './routers'
 
@@ -51,8 +48,6 @@ const App = (props) => {
 
   return (
     <div className="App">
-      {/* <Overview /> */}
-      {/* <DataScreen /> */}
       <HashRouter>
         <ConfigProvider locale={i18nLocale} componentSize={assemblySize}>
             <AuthRouter>
@@ -60,9 +55,8 @@ const App = (props) => {
             </AuthRouter>
         </ConfigProvider>
       </HashRouter>
-      {/* <Login /> */}
     </div>
-  );
+  )
 }
 
 const mapStateToProps = (state) => state.global

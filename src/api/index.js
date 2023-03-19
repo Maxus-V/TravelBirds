@@ -14,7 +14,8 @@ const axiosCanceler = new AxiosCanceler()
 
 const config = {
 	// 默认地址请求地址，可在 .env 开头文件中修改
-	baseURL: '/api',
+	// baseURL: '/api',
+	baseURL: 'https://mock.mengxuegu.com/mock/62abda3212c1416424630a45',
 	// 设置超时时间（10s）
 	timeout: 10000,
 	// 跨域时候允许携带凭证

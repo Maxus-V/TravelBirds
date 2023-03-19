@@ -24,8 +24,8 @@ export const rootRouter = [
 		}
 	},
 	{
-		path: "/datascreen/index",
-		element: lazyLoad(React.lazy(() => import("@/pages/DataScreen/index"))),
+		path: "/datascreen",
+		element: lazyLoad(React.lazy(() => import("@/pages/DataScreen"))),
 		meta: {
 			requiresAuth: true,
 			title: "随风飘飘游",
