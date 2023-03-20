@@ -72,7 +72,9 @@ npm run pack
 
 #### 2、移动端：
 
-|    ![2-3](https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/2-3.jpg)     |         ![1-3](https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/1-3.jpg)          |
+| ![2-3](https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/2-3.jpg)  | ![1-3](https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/1-3.jpg) | ![add to playlist](https://boyan01.github.io/quiet/mobile_add_to_playlist.png) | ![artist_detail](https://boyan01.github.io/quiet/mobile_artist_detail.png) |
+|:--------------------------------------------------------------------------:|:------------------------------------------------------------------------------:|:------------------------------------------------------------------------------:|:--------------------------------------------------------------------------:|
+|         ![daily](https://boyan01.github.io/quiet/mobile_daily.png)         |                                                                                |                                                                                |                                                                            |
 
 #### 3、桌面端：
 
