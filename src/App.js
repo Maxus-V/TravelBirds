@@ -1,27 +1,22 @@
 import { useState, useEffect } from 'react'
 
-import './App.css'
-
 import { HashRouter } from "react-router-dom"
 import Router from './routers'
+import AuthRouter from "@/routers/utils/authRouter"
 
 import { connect } from "react-redux"
 import { setLanguage } from "@/redux/modules/global/action"
 
+import i18n from "i18next"
+
+import { ConfigProvider } from "antd"
 import zhCN from "antd/lib/locale/zh_CN"
 import enUS from "antd/lib/locale/en_US"
 
-import { getBrowserLang } from "@/utils/util"
-
-import { ConfigProvider } from "antd"
-
-import useTheme from "@/hooks/useTheme"
-
-import i18n from "i18next"
-
+import './App.css'
 import "moment/dist/locale/zh-cn"
-
-import AuthRouter from "@/routers/utils/authRouter"
+import useTheme from "@/hooks/useTheme"
+import { getBrowserLang } from "@/utils/util"
 
 const App = (props) => {
   const { language, assemblySize, themeConfig, setLanguage } = props

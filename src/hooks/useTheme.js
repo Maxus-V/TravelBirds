@@ -1,6 +1,7 @@
 
-import defaultTheme from "@/styles/themes/theme-default.less"
 import darkTheme from "@/styles/themes/theme-dark.less"
+import defaultTheme from "@/styles/themes/theme-default.less"
+
 /**
  * @description 全局主题设置
  * */
@@ -23,8 +24,8 @@ const useTheme = (themeConfig) => {
 		}
 		let styleDom = document.createElement("style")
 		styleDom.dataset.type = "dark"
-		console.log('darkTheme', defaultTheme)
-		styleDom.innerHTML = isDark ? darkTheme : defaultTheme
+		// console.log('darkTheme', defaultTheme)
+		// styleDom.innerHTML = isDark ? darkTheme : defaultTheme
 		head.appendChild(styleDom)
 	}
 	initTheme()

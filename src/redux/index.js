@@ -5,10 +5,12 @@ import storage from "redux-persist/lib/storage"
 import reduxThunk from "redux-thunk"
 import reduxPromise from "redux-promise"
 import global from "./modules/global/reducer"
+import auth from "./modules/auth/reducer"
 
 // 创建reducer(拆分reducer)
 const reducer = combineReducers({
 	global,
+	auth,
 })
 
 // redux 持久化配置

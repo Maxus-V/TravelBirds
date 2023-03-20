@@ -24,12 +24,12 @@ export const rootRouter = [
 		}
 	},
 	{
-		path: "/datascreen",
+		path: "/dataScreen",
 		element: lazyLoad(React.lazy(() => import("@/pages/DataScreen"))),
 		meta: {
 			requiresAuth: true,
 			title: "随风飘飘游",
-			key: "datascreen"
+			key: "dataScreen"
 		}
 	},
 	...routerArray,
