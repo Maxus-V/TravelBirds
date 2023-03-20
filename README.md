@@ -70,7 +70,13 @@ npm run pack
 
 ![1-1](https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/1-1.gif) 
 
-#### 2、桌面端：
+#### 2、移动端：
+
+![2-3](https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/2-3.jpg) 
+
+![1-3](https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/1-3.jpg) 
+
+#### 3、桌面端：
 
 ![2-2](https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/2-2.jpeg) 
 
