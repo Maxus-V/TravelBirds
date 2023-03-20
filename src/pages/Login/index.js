@@ -1,7 +1,7 @@
 import SwitchDark from "@/components/SwitchDark"
 import LoginForm from "./components/LoginForm"
 import welcome from "@/assets/images/login_welcome.png"
-import logo from "@/assets/images/login_logo.png"
+import logo from "@/assets/images/login_logo.webp"
 import "./Login.less"
 
 const Login = () => {

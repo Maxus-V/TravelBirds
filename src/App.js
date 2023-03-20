@@ -14,7 +14,7 @@ import zhCN from "antd/lib/locale/zh_CN"
 import enUS from "antd/lib/locale/en_US"
 
 import './App.css'
-import "moment/dist/locale/zh-cn"
+// import "moment/dist/locale/zh-cn"
 import useTheme from "@/hooks/useTheme"
 import { getBrowserLang } from "@/utils/util"
 
