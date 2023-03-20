@@ -85,3 +85,28 @@
 		}
 	}
 }
+
+@media (max-width: 760px) {
+	.login-container {
+		min-width: 0;
+		.login-box {
+			padding: 0 20px 0 20px;
+			.login-left {
+				display: none;
+			}
+			.login-form {
+				transform: scale(0.8);
+			}
+		}
+	}
+}
+
+@media (max-width: 280px) {
+	.login-container {
+		.login-box {
+			.login-form {
+				transform: scale(0.6);
+			}
+		}
+	}
+}
