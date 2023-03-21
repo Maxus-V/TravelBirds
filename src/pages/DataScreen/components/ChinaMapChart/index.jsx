@@ -1,13 +1,24 @@
+import { useRef ,useEffect } from "react"
 import { useEchart } from "@/hooks/useEchart"
 import echarts from "@/utils/echarts"
 import mapJson from "../../assets/china.json"
 import "./ChinaMapChart.less"
 
+import { message } from 'antd'
+import { debounce } from "lodash-es"
+
+import AMapLoader from '@amap/amap-jsapi-loader' 
+
+window._AMapSecurityConfig = {
+	// securityJsCode: 'YOUR_CODE',
+}
+
 const ChinaMapChart = () => {
-	echarts.registerMap("china", mapJson);
+	const weather = useRef(null)
+	echarts.registerMap("china", mapJson)
 	/* echarts sysmbol */
 	let planePath =
-		"path://M1705.06,1318.313v-89.254l-319.9-221.799l0.073-208.063c0.521-84.662-26.629-121.796-63.961-121.491c-37.332-0.305-64.482,36.829-63.961,121.491l0.073,208.063l-319.9,221.799v89.254l330.343-157.288l12.238,241.308l-134.449,92.931l0.531,42.034l175.125-42.917l175.125,42.917l0.531-42.034l-134.449-92.931l12.238-241.308L1705.06,1318.313z";
+		"path://M1705.06,1318.313v-89.254l-319.9-221.799l0.073-208.063c0.521-84.662-26.629-121.796-63.961-121.491c-37.332-0.305-64.482,36.829-63.961,121.491l0.073,208.063l-319.9,221.799v89.254l330.343-157.288l12.238,241.308l-134.449,92.931l0.531,42.034l175.125-42.917l175.125,42.917l0.531-42.034l-134.449-92.931l12.238-241.308L1705.06,1318.313z"
 	let data = [
 		{
 			fromName: "北京",
@@ -73,15 +84,13 @@ const ChinaMapChart = () => {
 				[103.9526, 30.7617]
 			]
 		}
-	];
+	]
 
 	const option = {
 		// 悬浮窗
 		tooltip: {
 			trigger: "item",
-			formatter: function (params) {
-				return `${params.name}: ${params.value || "-"}`;
-			}
+			triggerOn: 'click',
 		},
 		// echarts大小位置
 		grid: {
@@ -166,7 +175,28 @@ const ChinaMapChart = () => {
 				borderWidth: 1
 			},
 			tooltip: {
-				show: false
+				show: true,
+				formatter:  debounce((params) => {
+					params.name && weather.current.getLive(params.name, (err, data) => {
+						if (!err) {
+							params.name && message.success(<div>
+								<h4 >实时天气</h4><hr />
+								<p>城市/区：{data.city}</p>
+								<p>天气：{data.weather}</p>
+								<p>温度：{data.temperature}℃</p>
+								<p>风向：{data.windDirection}</p>
+								<p>风力：{data.windPower}</p>
+								<p>空气湿度：{data.humidity}</p>
+								<p>发布时间：{data.reportTime}</p>
+							</div>)
+						} else {
+							message.success(<div>
+								<p>已调用高德地图查询接口</p>
+								<p>对{params.name}进行天气查询</p>
+							</div>)
+						}
+					})
+				}, 800)
 			}
 		},
 		// 要显示的散点数据
@@ -213,9 +243,20 @@ const ChinaMapChart = () => {
 				data
 			}
 		]
-	};
+	}
 
-	const [echartsRef] = useEchart(option, data);
+	const [echartsRef] = useEchart(option, data)
+
+	useEffect(() => {
+		AMapLoader.load({
+			key: "02c85434b6ea9c8f1e85cb0a6f2882f",
+			version: "1.4.15",
+		}).then((AMap) => {
+			AMap.plugin('AMap.Weather', () => {
+				weather.current = new AMap.Weather()
+			})
+		})
+	}, [])
 
 	return (
 		<div className="content-box">

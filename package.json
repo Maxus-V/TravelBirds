@@ -5,6 +5,7 @@
   "main": "electron/main.js",
   "homepage": ".",
   "dependencies": {
+    "@amap/amap-jsapi-loader": "^1.0.1",
     "@babel/core": "^7.16.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@svgr/webpack": "^5.5.0",
@@ -46,6 +47,7 @@
     "js-md5": "^0.7.3",
     "less": "^4.1.3",
     "less-loader": "^11.1.0",
+    "lodash-es": "^4.17.21",
     "mini-css-extract-plugin": "^2.4.5",
     "moment": "^2.29.4",
     "nprogress": "^0.2.0",

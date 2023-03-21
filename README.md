@@ -23,7 +23,7 @@
 - 🚀 使用 自定义高阶组件 进行路由权限拦截（403 页面）
 - 🚀 基于Audio实现音乐单曲循环播放功能，用户可自行选择开启或关闭
 - 🚀 支持 YouSheBiaoTiHei 和 MetroDF 等外接字体
-- 🚀 实现 SVG 动画，i18n 国际化（部分），移动端适配
+- 🚀 实现 SVG 动画，i18n 国际化（部分），移动端适配，实时天气查询
 
 ### 四、安装使用步骤 📑 📑 📑 📑
 
@@ -69,6 +69,8 @@ npm run pack
 ![1-1](https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/1-1.jpeg) 
 
 ![1-1](https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/1-1.gif) 
+
+![5-1](https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/5-1.jpeg) 
 
 #### 2、移动端：
 
