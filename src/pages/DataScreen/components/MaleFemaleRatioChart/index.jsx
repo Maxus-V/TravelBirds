@@ -2,8 +2,8 @@ import { useEchart } from "@/hooks/useEchart"
 
 import "./MaleFemaleRatioChart.less"
 
-import man from "../../images/man.png"
-import woman from "../../images/woman.png"
+import man from "../../images/man.webp"
+import woman from "../../images/woman.webp"
 
 const MaleFemaleRatioChart = () => {
 	let data = {

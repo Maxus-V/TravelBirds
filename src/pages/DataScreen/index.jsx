@@ -17,7 +17,7 @@ import { setToken } from "@/redux/modules/global/action"
 
 import { useAudio } from "@/hooks/useAudio"
 import music from './assets/2516694153.mp3'
-import dataScreenTitle from "./images/dataScreen-title.png"
+import dataScreenTitle from "./images/dataScreen-title.webp"
 
 import "./index.less"
 
