@@ -84,6 +84,12 @@ npm run pack
 
 ![1-2](https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/1-2.gif) 
 
+#### 4、性能优化：
+
+![4-1](https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/4-1.jpeg) 
+
+![4-2](https://github.com/Maxus-V/Geo-React-Electron/blob/main/public/images/4-2.jpg) 
+
 ### 六、主要资源目录 🌲 🌲 🌲 🌲 🌲 🌲
 
 ```text
