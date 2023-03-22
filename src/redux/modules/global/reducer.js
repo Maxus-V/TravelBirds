@@ -5,7 +5,7 @@ const globalState = {
 	token: "",
 	userInfo: "",
 	assemblySize: "middle",
-	language: "",
+	language: "zh",
 	themeConfig: {
 		// 默认 primary 主题颜色
 		primary: "#1890ff",

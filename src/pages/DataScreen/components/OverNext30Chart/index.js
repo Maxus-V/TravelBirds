@@ -1,43 +1,43 @@
-import { useEchart } from "@/hooks/useEchart";
-import { randomNum } from "@/utils/util";
-import "./OverNext30Chart.less";
+import { useEchart } from "@/hooks/useEchart"
+import { randomNum } from "@/utils/util"
+import "./OverNext30Chart.less"
 
 const OverNext30Chart = () => {
 	// js 获取当前日期到之后一个月30天的日期区间
 	const initDate = () => {
-		let dateList = [];
-		let startDate = new Date();
-		let endDate = new Date();
-		endDate.setDate(startDate.getDate() + 30);
-		startDate.setDate(startDate.getDate() + 1);
+		let dateList = []
+		let startDate = new Date()
+		let endDate = new Date()
+		endDate.setDate(startDate.getDate() + 30)
+		startDate.setDate(startDate.getDate() + 1)
 		while (endDate.getTime() - startDate.getTime() >= 0) {
 			let month =
 				(startDate.getMonth() + 1).toString().length === 1
 					? "0" + (startDate.getMonth() + 1).toString()
-					: startDate.getMonth() + 1;
-			let day = startDate.getDate().toString().length === 1 ? "0" + startDate.getDate() : startDate.getDate();
-			dateList.push(month + "/" + day);
-			startDate.setDate(startDate.getDate() + 1);
+					: startDate.getMonth() + 1
+			let day = startDate.getDate().toString().length === 1 ? "0" + startDate.getDate() : startDate.getDate()
+			dateList.push(month + "/" + day)
+			startDate.setDate(startDate.getDate() + 1)
 		}
-		return dateList;
-	};
+		return dateList
+	}
 	let data = {
 		unit: ["访问量"],
 		data: new Array(30).fill("").map(val => {
 			val = randomNum(1, 20000);
-			return val;
+			return val
 		})
-	};
+	}
 	const option = {
 		tooltip: {
 			trigger: "axis",
 			confine: true,
 			formatter: (params) => {
-				let tipData = params[0];
+				let tipData = params[0]
 				let html = `<div class="lineChart-bg">
                         <span style="">${tipData.name} <i >${tipData.value}</i> 人次访问</span>
-                    </div>`;
-				return html;
+                    </div>`
+				return html
 			},
 			backgroundColor: "transparent", //提示标签背景颜色
 			borderColor: "transparent",
@@ -131,7 +131,7 @@ const OverNext30Chart = () => {
 			};
 		}),
 		series: data.data.map(() => {
-			// console.log("30天预计", val);
+			// console.log("30天预计", val)
 			return {
 				name: "",
 				type: "line",
@@ -180,11 +180,11 @@ const OverNext30Chart = () => {
 					shadowBlur: 20 //shadowBlur设图形阴影的模糊大小。配合shadowColor,shadowOffsetX/Y, 设置图形的阴影效果。
 				},
 				data: data.data
-			};
+			}
 		})
-	};
-	const [echartsRef] = useEchart(option, data);
-	return <div className="echarts" ref={echartsRef}></div>;
-};
+	}
+	const [echartsRef] = useEchart(option, data)
+	return <div className="echarts" ref={echartsRef}></div>
+}
 
-export default OverNext30Chart;
+export default OverNext30Chart

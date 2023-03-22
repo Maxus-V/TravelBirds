@@ -1,9 +1,11 @@
 import { useLocation, Navigate } from "react-router-dom"
-import { AxiosCanceler } from "@/api/helper/axiosCancel"
 import { searchRoute } from "@/utils/util"
 import { rootRouter } from "@/routers"
-import { HOME_URL } from "@/config"
+
+import { AxiosCanceler } from "@/api/helper/axiosCancel"
+
 import { store } from "@/redux"
+import { HOME_URL } from "@/config"
 
 const axiosCanceler = new AxiosCanceler()
 
@@ -11,7 +13,6 @@ const axiosCanceler = new AxiosCanceler()
  * @description 路由守卫组件
  * */
 const AuthRouter = (props) => {
-	
 	const { pathname } = useLocation()
 	const route = searchRoute(pathname, rootRouter)
 	// * 在跳转路由之前，清除所有的请求

@@ -1,14 +1,17 @@
-import NProgress from "@/config/nprogress"
 import axios from "axios"
+import NProgress from "@/config/nprogress"
+
+import { AxiosCanceler } from "./helper/axiosCancel"
 import { showFullScreenLoading, tryHideFullScreenLoading } from "@/config/serviceLoading"
+
+import { store } from "@/redux"
+import { setToken } from "@/redux/modules/global/action"
+
+import { message } from "antd"
+
 import { ResultEnum } from "@/enums/httpEnum"
 
 import { checkStatus } from "./helper/checkStatus"
-import { AxiosCanceler } from "./helper/axiosCancel"
-
-import { setToken } from "@/redux/modules/global/action"
-import { message } from "antd"
-import { store } from "@/redux"
 
 const axiosCanceler = new AxiosCanceler()
 

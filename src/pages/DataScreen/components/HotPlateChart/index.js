@@ -1,6 +1,6 @@
-import { useEchart } from "@/hooks/useEchart";
-import { ranking1, ranking2, ranking3, ranking4 } from "../../assets/ranking-icon";
-import "./HotPlateChart.less";
+import { useEchart } from "@/hooks/useEchart"
+import { ranking1, ranking2, ranking3, ranking4 } from "../../assets/ranking-icon"
+import "./HotPlateChart.less"
 
 const HotPlateChart = () => {
 	let data = [
@@ -34,8 +34,8 @@ const HotPlateChart = () => {
 			percentage: "30%",
 			maxValue: 100000
 		}
-	];
-	const colors = ["#1089E7", "#F57474", "#56D0E3", "#F8B448", "#8B78F6"];
+	]
+	const colors = ["#1089E7", "#F57474", "#56D0E3", "#F8B448", "#8B78F6"]
 	const option = {
 		grid: {
 			top: "5%",
@@ -208,8 +208,8 @@ const HotPlateChart = () => {
 				silent: true
 			}
 		]
-	};
-	const [echartsRef] = useEchart(option, data);
+	}
+	const [echartsRef] = useEchart(option, data)
 	return (
 		<>
 			<div className="echarts-header">
@@ -219,7 +219,7 @@ const HotPlateChart = () => {
 			</div>
 			<div ref={echartsRef} className="hot-echarts"></div>
 		</>
-	);
-};
+	)
+}
 
-export default HotPlateChart;
+export default HotPlateChart

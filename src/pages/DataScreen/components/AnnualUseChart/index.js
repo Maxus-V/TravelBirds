@@ -1,8 +1,8 @@
-import { useEchart } from "@/hooks/useEchart";
-import "./AnnualUseChart.less";
+import { useEchart } from "@/hooks/useEchart"
+import "./AnnualUseChart.less"
 
 const AnnualUseChart = () => {
-	const gradientColors = ["rgba(254, 219, 101,0.1)", "rgba(0, 122, 254,0.1)", "rgba(255, 75, 122, 0.1)"];
+	const gradientColors = ["rgba(254, 219, 101,0.1)", "rgba(0, 122, 254,0.1)", "rgba(255, 75, 122, 0.1)"]
 	let annualData = [
 		{
 			label: new Date().getFullYear() - 2 + "年",
@@ -16,13 +16,13 @@ const AnnualUseChart = () => {
 			label: new Date().getFullYear() + "年",
 			value: ["548", "259", "113", "90", "69", "512", "23", "49", "28", "420", "313", "156"]
 		}
-	];
+	]
 	let data = {
 		data: annualData,
 		unit: annualData.map(val => val.label),
 		columns: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
 		colors: ["#FFA600", "#007AFE", "#FF4B7A"]
-	};
+	}
 	const option = {
 		tooltip: {
 			trigger: "axis",
@@ -191,9 +191,9 @@ const AnnualUseChart = () => {
 				data: val.value
 			};
 		})
-	};
-	const [echartsRef] = useEchart(option, data);
-	return <div ref={echartsRef} style={{ width: "100%", height: "100%" }}></div>;
-};
+	}
+	const [echartsRef] = useEchart(option, data)
+	return <div ref={echartsRef} style={{ width: "100%", height: "100%" }}></div>
+}
 
-export default AnnualUseChart;
+export default AnnualUseChart

@@ -263,7 +263,7 @@ const ChinaMapChart = () => {
 			<div className="map-ball"></div>
 			<div style={{height: '80vh'}} ref={echartsRef} className="echarts"></div>
 		</div>
-	);
-};
+	)
+}
 
-export default ChinaMapChart;
+export default ChinaMapChart

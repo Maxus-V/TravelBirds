@@ -1,20 +1,16 @@
 import { useState } from "react"
+import { connect } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 
 import { Button, Form, Input, message } from "antd"
 import { UserOutlined, LockOutlined, CloseCircleOutlined } from "@ant-design/icons"
 
-import { useTranslation } from "react-i18next"
-
-import md5 from "js-md5"
-
-import { useNavigate } from "react-router-dom"
+import { setToken } from "@/redux/modules/global/action"
 import { loginApi } from "@/api/modules/login"
-
 import { HOME_URL } from "@/config"
 
-import { setToken } from "@/redux/modules/global/action"
-
-import { connect } from "react-redux"
+import md5 from "js-md5"
 
 const LoginForm = (props) => {
 	const { t } = useTranslation()
@@ -25,7 +21,7 @@ const LoginForm = (props) => {
 
 	const onFinish = async (loginForm) => {
 		try {
-			setLoading(true);
+			setLoading(true)
 			loginForm.password = md5(loginForm.password)
 			const { data } = await loginApi(loginForm)
 			setToken(data?.access_token)
@@ -73,5 +69,6 @@ const LoginForm = (props) => {
     )
 }
 
+//用法参考cn.react-redux.js.org/api/connect
 const mapDispatchToProps = { setToken }
 export default connect(null, mapDispatchToProps)(LoginForm)

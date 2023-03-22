@@ -22,7 +22,7 @@ const PlatformSourceChart = () => {
 			name: "其他渠道",
 			percentage: "30%"
 		}
-	];
+	]
 	// const colors = ["#078dbc", "#6ad40b", "#6172fc", "#1786ff", "#ffbe2f", "#4dc89d", "#b797df", "#ffd3aa"];
 	const option = {
 		grid: {
@@ -339,10 +339,10 @@ const PlatformSourceChart = () => {
 				]
 			}
 		]
-	};
-	const [echartsRef] = useEchart(option, data);
+	}
+	const [echartsRef] = useEchart(option, data)
 
-	return <div ref={echartsRef} style={{ width: "100%", height: "100%" }}></div>;
-};
+	return <div ref={echartsRef} style={{ width: "100%", height: "100%" }}></div>
+}
 
-export default PlatformSourceChart;
+export default PlatformSourceChart

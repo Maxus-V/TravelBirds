@@ -107,7 +107,7 @@ const MaleFemaleRatioChart = () => {
 			}
 		]
 	};
-	const [echartsRef] = useEchart(option, data);
+	const [echartsRef] = useEchart(option, data)
 	return (
 		<div className="malefemaleRatio-main">
 			<div className="malefemaleRatio-header">
@@ -122,7 +122,7 @@ const MaleFemaleRatioChart = () => {
 			</div>
 			<div ref={echartsRef} className="echarts"></div>
 		</div>
-	);
-};
+	)
+}
 
 export default MaleFemaleRatioChart

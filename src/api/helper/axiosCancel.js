@@ -1,6 +1,8 @@
-import axios, { AxiosRequestConfig, Canceler } from "axios"
-import { isFunction } from "@/utils/is/index"
+
 import qs from "qs"
+import axios from "axios"
+
+import { isFunction } from "@/utils/is/index"
 
 // * 声明一个 Map 用于存储每个请求的标识 和 取消函数
 let pendingMap = new Map()
@@ -49,7 +51,7 @@ export class AxiosCanceler {
 	removeAllPending() {
 		pendingMap.forEach(cancel => {
 			cancel && isFunction(cancel) && cancel()
-		});
+		})
 		pendingMap.clear()
 	}
 
