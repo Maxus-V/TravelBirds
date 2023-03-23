@@ -53,10 +53,10 @@ npm run electron-start
 - **Build：**
 
 ```text
-# 打包文件
+# 打包 build 文件，用于网页端
 npm run build
 
-# 生成文件
+# 打包 dist 文件，用于桌面端
 npm run pack
 ```
 
