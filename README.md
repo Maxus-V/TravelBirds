@@ -57,7 +57,7 @@ npm run electron-start
 npm run build
 
 # 打包 dist 文件，用于桌面端
-npm run pack
+npm run pack 
 ```
 
 ### 五、项目截图 🌈 🌈 🌈 🌈 🌈
