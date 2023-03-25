@@ -9,7 +9,7 @@ const MaleFemaleRatioChart = () => {
 	let data = {
 		man: 0.6,
 		woman: 0.4
-	};
+	}
 	const option = {
 		xAxis: {
 			type: "value",
@@ -106,7 +106,7 @@ const MaleFemaleRatioChart = () => {
 				}
 			}
 		]
-	};
+	}
 	const [echartsRef] = useEchart(option, data)
 	return (
 		<div className="malefemaleRatio-main">

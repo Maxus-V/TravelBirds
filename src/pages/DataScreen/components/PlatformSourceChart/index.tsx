@@ -1,4 +1,4 @@
-import { useEchart } from "@/hooks/useEchart";
+import { useEchart } from "@/hooks/useEchart"
 
 const PlatformSourceChart = () => {
 	let data = [

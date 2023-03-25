@@ -7,7 +7,7 @@ const NotFound = () => {
 	const navigate = useNavigate();
 	const goHome = () => {
 		navigate(HOME_URL)
-	};
+	}
 	return (
 		<Result
 			status="404"
@@ -19,7 +19,7 @@ const NotFound = () => {
 				</Button>
 			}
 		/>
-	);
-};
+	)
+}
 
 export default NotFound

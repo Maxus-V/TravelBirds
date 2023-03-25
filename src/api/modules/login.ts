@@ -4,11 +4,13 @@ import qs from "qs"
 
 import http from "@/api"
 
+import { Login } from "@/api/interface"
+
 /**
  * @name 登录模块
  */
 // * 用户登录接口
-export const loginApi = (params) => {
+export const loginApi = (params: Login.ReqLoginForm): any => {
 	// return http.post(PORT1 + `/login`)
 	// return http.post(PORT1 + `/login`, {}, { params }) // post 请求携带 query 参数  ==>  ?username=admin&password=123456
 	return http.post(PORT1 + `/login`, qs.stringify(params)) // post 请求携带 表单 参数  ==>  application/x-www-form-urlencoded

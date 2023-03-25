@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios, { AxiosInstance, AxiosError, AxiosRequestConfig, AxiosResponse } from "axios"
 import NProgress from "@/config/nprogress"
 
 import { AxiosCanceler } from "./helper/axiosCancel"
@@ -13,6 +13,8 @@ import { ResultEnum } from "@/enums/httpEnum"
 
 import { checkStatus } from "./helper/checkStatus"
 
+import { ResultData } from "@/api/interface"
+
 const axiosCanceler = new AxiosCanceler()
 
 const config = {
@@ -26,7 +28,8 @@ const config = {
 };
 
 class RequestHttp {
-	constructor(config) {
+	service: AxiosInstance
+	public constructor(config: AxiosRequestConfig) {
 		// 实例化axios
 		this.service = axios.create(config)
 
@@ -36,16 +39,16 @@ class RequestHttp {
 		 * token校验(JWT) : 接受服务器返回的token,存储到redux/本地储存当中
 		 */
 		this.service.interceptors.request.use(
-			(config) => {
+			(config: any) => {
 				NProgress.start()
 				// * 将当前请求添加到 pending 中
 				axiosCanceler.addPending(config)
 				// * 如果当前请求不需要显示 loading,在api服务中通过指定的第三个参数: { headers: { noLoading: true } }来控制不显示loading，参见loginApi
-				config.headers.noLoading || showFullScreenLoading()
+				config.headers!.noLoading || showFullScreenLoading()
 				const token = store.getState().global.token
 				return { ...config, headers: { ...config.headers, "x-access-token": token } }
 			},
-			(error) => {
+			(error: AxiosError) => {
 				return Promise.reject(error)
 			}
 		)
@@ -92,17 +95,17 @@ class RequestHttp {
 	}
 
 	// * 常用请求方法封装
-	get(url, params, _object = {}) {
-		return this.service.get(url, { params, ..._object })
+	get<T>(url: string, params?: object, _object = {}): Promise<ResultData<T>> {
+		return this.service.get(url, { params, ..._object });
 	}
-	post(url, params, _object = {}) {
-		return this.service.post(url, params, _object)
+	post<T>(url: string, params?: object, _object = {}): Promise<ResultData<T>> {
+		return this.service.post(url, params, _object);
 	}
-	put(url, params, _object = {}) {
-		return this.service.put(url, params, _object)
+	put<T>(url: string, params?: object, _object = {}): Promise<ResultData<T>> {
+		return this.service.put(url, params, _object);
 	}
-	delete(url, params, _object = {}) {
-		return this.service.delete(url, { params, ..._object })
+	delete<T>(url: string, params?: any, _object = {}): Promise<ResultData<T>> {
+		return this.service.delete(url, { params, ..._object });
 	}
 }
 

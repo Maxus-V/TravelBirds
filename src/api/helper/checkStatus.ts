@@ -5,7 +5,7 @@ import { message } from "antd"
  * @param {Number} status
  * @return void
  */
-export const checkStatus = (status) => {
+export const checkStatus = (status: number): void => {
 	switch (status) {
 		case 400:
 			message.error("请求失败！请您稍后重试")

@@ -1,4 +1,3 @@
-import SwitchDark from "@/components/SwitchDark"
 import LoginForm from "./components/LoginForm"
 
 import welcome from "@/assets/images/login_welcome.png"
@@ -11,7 +10,6 @@ const Login = () => {
 	const { t } = useTranslation()
 	return (
 		<div className="login-container">
-			{/* <SwitchDark /> */}
 			<div className="login-box">
 				<div className="login-left">
 					<img src={welcome} alt="login" />
@@ -25,7 +23,7 @@ const Login = () => {
 				</div>
 			</div>
 		</div>
-	);
-};
+	)
+}
 
 export default Login

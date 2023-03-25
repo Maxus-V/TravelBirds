@@ -8,18 +8,20 @@ import { UserOutlined, LockOutlined, CloseCircleOutlined } from "@ant-design/ico
 
 import { setToken } from "@/redux/modules/global/action"
 import { loginApi } from "@/api/modules/login"
-import { HOME_URL } from "@/config"
+import { HOME_URL } from "@/config/index"
 
 import md5 from "js-md5"
 
-const LoginForm = (props) => {
+import { Login } from "@/api/interface"
+
+const LoginForm = (props: any) => {
 	const { t } = useTranslation()
 	const { setToken } = props
 	const navigate = useNavigate()
     const [form] = Form.useForm()
     const [loading, setLoading] = useState(false)
 
-	const onFinish = async (loginForm) => {
+	const onFinish = async (loginForm: Login.ReqLoginForm) => {
 		try {
 			setLoading(true)
 			loginForm.password = md5(loginForm.password)
@@ -32,7 +34,7 @@ const LoginForm = (props) => {
 		}
 	}
 
-	const onFinishFailed = (errorInfo) => {
+	const onFinishFailed = (errorInfo: any) => {
 		console.log("Failed:", errorInfo)
 	}
     return (
@@ -70,5 +72,6 @@ const LoginForm = (props) => {
 }
 
 //用法参考cn.react-redux.js.org/api/connect
-const mapDispatchToProps = { setToken }
-export default connect(null, mapDispatchToProps)(LoginForm)
+const mapStateToProps = null // 订阅 store 的 state 更新
+const mapDispatchToProps = { setToken } // 处理 Redux store 的 dispatch
+export default connect(mapStateToProps , mapDispatchToProps)(LoginForm)

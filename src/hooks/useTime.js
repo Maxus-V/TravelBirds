@@ -10,10 +10,10 @@ export const useTime = () => {
 	useEffect(() => {
 		timer.current = setInterval(() => {
 			setTime(moment().format("YYYY年MM月DD日 dddd HH:mm:ss"))
-		}, 1000);
+		}, 1000)
 		return () => {
 			clearInterval(timer.current)
-		};
+		}
 	}, [time])
 
 	return {

@@ -4,7 +4,7 @@ import "echarts-liquidfill"
 import "./index.less"
 
 const RealTimeAccessChart = () => {
-	let data = 0.5;
+	let data = 0.5
 	const option = {
 		title: [
 			{
@@ -176,7 +176,7 @@ const RealTimeAccessChart = () => {
 				color: "#31d8d5"
 			}
 		]
-	};
+	}
 	const [echartsRef] = useEchart(option, data)
 	const [actualTotal] = useState("233888")
 	return (
@@ -191,14 +191,14 @@ const RealTimeAccessChart = () => {
 							<div className="actual-item" key={index}>
 								{item}
 							</div>
-						);
+						)
 					})}
 					<div className="actual-item">人</div>
 				</div>
 			</div>
 			<div ref={echartsRef} className="actual-echarts"></div>
 		</>
-	);
-};
+	)
+}
 
 export default RealTimeAccessChart

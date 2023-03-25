@@ -24,7 +24,7 @@ const OverNext30Chart = () => {
 	let data = {
 		unit: ["访问量"],
 		data: new Array(30).fill("").map(val => {
-			val = randomNum(1, 20000);
+			val = randomNum(1, 20000)
 			return val
 		})
 	}

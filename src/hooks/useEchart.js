@@ -12,7 +12,7 @@ export const useEchart = (options, data) => {
 
 	const echartsResize = () => {
 		echartsRef && myChart?.current?.resize()
-	};
+	}
 
 	useEffect(() => {
 		if (data?.length !== 0) {
@@ -35,4 +35,4 @@ export const useEchart = (options, data) => {
 	}, [])
 
 	return [echartsRef]
-};
+}
