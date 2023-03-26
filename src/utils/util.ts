@@ -12,7 +12,7 @@ export function randomNum(min: number, max: number): number {
 }
 
 /**
- * @description 获取浏览器默认语言
+ * @description 获取浏览器默认语言 
  * @return string
  */
 export const getBrowserLang = () => {
