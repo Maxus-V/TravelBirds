@@ -1,10 +1,10 @@
-import { Switch } from "antd";
-import { connect } from "react-redux";
-import { setThemeConfig } from "@/redux/modules/global/action";
+import { Switch } from "antd"
+import { connect } from "react-redux"
+import { setThemeConfig } from "@/redux/modules/global/action"
 
-const SwitchDark = (props) => {
+const SwitchDark = (props: any) => {
 	const { setThemeConfig, themeConfig } = props
-	const onChange = (checked) => {
+	const onChange = (checked: boolean) => {
 		setThemeConfig({ ...themeConfig, isDark: checked })
 	}
 

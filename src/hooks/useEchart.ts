@@ -6,9 +6,9 @@ import * as echarts from "echarts"
  * @param {Element} data 数据
  * @return chart
  * */
-export const useEchart = (options, data) => {
-	const myChart = useRef()
-	const echartsRef = useRef(null)
+export const useEchart = (options: echarts.EChartsCoreOption, data?: any) => {
+	const myChart: any = useRef()
+	const echartsRef = useRef<HTMLDivElement>(null)
 
 	const echartsResize = () => {
 		echartsRef && myChart?.current?.resize()

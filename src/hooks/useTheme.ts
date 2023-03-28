@@ -1,11 +1,10 @@
 
-import darkTheme from "@/styles/themes/theme-dark.less"
-import defaultTheme from "@/styles/themes/theme-default.less"
+import { ThemeConfigProp } from "@/redux/interface"
 
 /**
  * @description 全局主题设置
  * */
-const useTheme = (themeConfig) => {
+const useTheme = (themeConfig: ThemeConfigProp) => {
 	const { weakOrGray, isDark } = themeConfig
 	const initTheme = () => {
 		// 灰色和弱色切换

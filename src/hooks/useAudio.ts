@@ -8,7 +8,7 @@ import { useEffect, useState, useRef } from "react"
 
 export const useAudio = (url) => {
     const [onMusic, setOnMusic] = useState(false)
-    const audio = useRef()
+    const audio: any = useRef()
     
     const play = () => {
         audio.current = null
