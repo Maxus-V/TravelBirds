@@ -7,7 +7,7 @@ import * as echarts from "echarts"
  * @return chart
  * */
 export const useEchart = (options: echarts.EChartsCoreOption, data?: any) => {
-	const myChart: any = useRef()
+	const myChart: any = useRef() 
 	const echartsRef = useRef<HTMLDivElement>(null)
 
 	const echartsResize = () => {
