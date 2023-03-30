@@ -1,8 +1,8 @@
-const { contextBridge, ipcRenderer, shell } = require('electron');
-const remote = require('@electron/remote/main')
+// console.log('Preload script loaded successfully!')
+const { contextBridge } = require('electron')
 
 contextBridge.exposeInMainWorld('electron', {
-  ipcRenderer,
-  remote,
-  shell,
+  doAThing: () => {
+    console.log('hi')
+  }
 })

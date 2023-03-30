@@ -3,10 +3,9 @@
 // BrowserWindow 模块，它创建和管理应用程序 窗口。
 // new BrowserWindow([options]) 事件和方法调用同app
 const {app, BrowserWindow, nativeImage, ipcMain, dialog } = require('electron');
-const remote = require('@electron/remote/main')
 
 // const url = require('url');
-// const path = require('path');
+const path = require('path');
 
 // 添加一个createWindow()方法来将index.html加载进一个新的BrowserWindow实例。
 const createWindow = () => {
@@ -24,8 +23,10 @@ const createWindow = () => {
       webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
       webSecurity: false, // 禁用同源策略
       nodeIntegrationInSubFrames: true, // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
-      // preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
       enableRemoteModule: true,
+      //contextBridge API can only be used when contextIsolation is enabled 的解决方法
+      contextIsolation: true,
     },
     frame: true, //是否创建带边框窗口
   })
@@ -40,11 +41,18 @@ const createWindow = () => {
     const win = BrowserWindow.fromWebContents(webContents)
     win.setTitle(title)
   })
-  // 加载应用 --开发阶段  需要运行 npm run start
-  win.loadURL('http://localhost:3000/');
 
-  remote.initialize()
-  remote.enable(win.webContents)
+  /* 
+   * 加载应用-----  electron-quick-start中默认的加载入口
+    win.loadURL(url.format({
+      pathname: path.join(__dirname, './build/index.html'),
+      protocol: 'file:',
+      slashes: true
+    }))
+  */
+
+  // 加载应用 --开发阶段  需要运行 npm run start
+  win.loadURL('http://localhost:3000/')
 
   win.webContents.on('dom-ready', () => {
     console.log('22222')
