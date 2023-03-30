@@ -14,6 +14,8 @@ import md5 from "js-md5"
 
 import { Login } from "@/api/interface"
 
+const { remote }  = window.electron;
+
 const LoginForm = (props: any) => {
 	const { t } = useTranslation()
 	const { setToken } = props
@@ -62,6 +64,15 @@ const LoginForm = (props: any) => {
 					icon={<CloseCircleOutlined />}
 				>
 					{t("login.reset")}
+				</Button>
+				<Button id="btn" onClick={() => {
+					let win = remote.BrowserWindow({
+						width: 1080,// 窗口宽度
+						height: 1080,
+					})
+					win.loadURL('http://localhost:3000/')
+				}}>
+					test
 				</Button>
 				<Button type="primary" htmlType="submit" loading={loading} icon={<UserOutlined />}>
 					{t("login.confirm")}

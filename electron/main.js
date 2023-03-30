@@ -2,7 +2,8 @@
 // 事件调用app.on('eventName', callback)，方法调用app.functionName(arg)
 // BrowserWindow 模块，它创建和管理应用程序 窗口。
 // new BrowserWindow([options]) 事件和方法调用同app
-const {app, BrowserWindow, nativeImage} = require('electron');
+const {app, BrowserWindow, nativeImage, ipcMain, dialog } = require('electron');
+const remote = require('@electron/remote/main')
 
 // const url = require('url');
 // const path = require('path');
@@ -12,18 +13,46 @@ const createWindow = () => {
   let win = new BrowserWindow({
     width: 1080,// 窗口宽度
     height: 1080, // 窗口高度
+    // maxHeight: 0,
+    // minWidth: 0,
+    // resizable: false,
     title: '随风飘飘游', // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
     // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
-    icon: nativeImage.createFromPath('src/public/favicon.ico'),
+    icon: nativeImage.createFromPath('./public/favicon.ico'),
     webPreferences: { // 网页功能设置
       nodeIntegration: true, // 是否启用node集成 渲染进程的内容有访问node的能力
       webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
       webSecurity: false, // 禁用同源策略
-      nodeIntegrationInSubFrames: true // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
-    }
-  });
+      nodeIntegrationInSubFrames: true, // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
+      // preload: path.join(__dirname, 'preload.js')
+      enableRemoteModule: true,
+    },
+    frame: true, //是否创建带边框窗口
+  })
+  if (process.platform === 'darwin') {
+    app.dock.setIcon('./public/favicon.ico');
+  }
+  // ipcMain.on('mainWindow:close', () => {
+  //   mainWindow.hide()
+  // })
+  ipcMain.on('set-title', (event, title) => {
+    const webContents = event.sender
+    const win = BrowserWindow.fromWebContents(webContents)
+    win.setTitle(title)
+  })
   // 加载应用 --开发阶段  需要运行 npm run start
   win.loadURL('http://localhost:3000/');
+
+  remote.initialize()
+  remote.enable(win.webContents)
+
+  win.webContents.on('dom-ready', () => {
+    console.log('22222')
+  })
+
+  win.webContents.on('did-finish-load', () => {
+    console.log('11111')
+  })
 
   // __dirname 字符串指向当前正在执行脚本的路径
   // path.join API 将多个路径联结在一起，创建一个跨平台的路径字符串。
@@ -38,6 +67,20 @@ const createWindow = () => {
     win.show();
     win.focus();
   });
+
+  win.on('close', (event) => {
+    const choice = dialog.showMessageBoxSync(win, {
+      type: 'question',
+      buttons: ['是的', '不了'],
+      title: '提示',
+      message: '是否退出 随风飘飘游 ？',
+      icon: nativeImage.createFromPath('./public/favicon.ico'),
+    })
+
+    if (choice === 1) {
+      event.preventDefault()
+    }
+  })
 
   // 当窗口关闭时发出。在你收到这个事件后，你应该删除对窗口的引用，并避免再使用它。
   win.on('closed', () => {
@@ -67,3 +110,15 @@ app.on('window-all-closed', () => {
   // macOS(darwin)
   if (process.platform !== 'darwin') app.quit();
 });
+
+app.on('before-quit', () => {
+  console.log('555')
+})
+
+app.on('will-quit', () => {
+  console.log('666')
+})
+
+app.on('quit', () => {
+  console.log('777')
+})

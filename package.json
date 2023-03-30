@@ -7,6 +7,7 @@
   "dependencies": {
     "@amap/amap-jsapi-loader": "^1.0.1",
     "@babel/core": "^7.16.0",
+    "@electron/remote": "^2.0.9",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@svgr/webpack": "^5.5.0",
     "@testing-library/jest-dom": "^5.16.5",
@@ -51,6 +52,7 @@
     "mini-css-extract-plugin": "^2.4.5",
     "moment": "^2.29.4",
     "nprogress": "^0.2.0",
+    "path-browserify": "^1.0.1",
     "postcss": "^8.4.4",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^6.2.1",
