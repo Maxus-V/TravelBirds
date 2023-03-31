@@ -63,11 +63,14 @@ const LoginForm = (props: any) => {
 				>
 					{t("login.reset")}
 				</Button>
-				<Button id="btn" onClick={() => {
-					if(window.electron) window.electron.doAThing()
+				{/* <Button id="btn" onClick={async() => {
+					// if(window.electron) window.electron.doAThing()
+					if (!window.electron) return
+					const response = await window.electron.ping()
+  					console.log(response) // 打印 'pong'
 				}}>
 					test
-				</Button>
+				</Button> */}
 				<Button type="primary" htmlType="submit" loading={loading} icon={<UserOutlined />}>
 					{t("login.confirm")}
 				</Button>

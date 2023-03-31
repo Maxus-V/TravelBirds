@@ -36,11 +36,13 @@ const createWindow = () => {
   // ipcMain.on('mainWindow:close', () => {
   //   mainWindow.hide()
   // })
-  ipcMain.on('set-title', (event, title) => {
-    const webContents = event.sender
-    const win = BrowserWindow.fromWebContents(webContents)
-    win.setTitle(title)
-  })
+  // ipcMain.on('set-title', (event, title) => {
+  //   const webContents = event.sender
+  //   const win = BrowserWindow.fromWebContents(webContents)
+  //   win.setTitle(title)
+  // })
+
+  ipcMain.handle('ping', () => 'pong')
 
   /* 
    * 加载应用-----  electron-quick-start中默认的加载入口
