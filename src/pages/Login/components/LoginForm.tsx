@@ -73,7 +73,7 @@ const LoginForm = (props: any) => {
 				</Button> */}
 				<Button type="primary" htmlType="submit" loading={loading} icon={<UserOutlined />}>
 					{t("login.confirm")}
-				</Button>
+				</Button> 
 			</Form.Item>
 		</Form>
     )
