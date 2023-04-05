@@ -32,6 +32,15 @@ export const rootRouter = [
 			key: "dataScreen"
 		}
 	},
+	{
+		path: "/threeDimension",
+		element: lazyLoad(React.lazy(() => import("@/pages/ThreeDimension"))),
+		meta: {
+			requiresAuth: false,
+			title: "三维模型",
+			key: "threeDimension"
+		}
+	},
 	...routerArray,
 	{
 		path: "*",
