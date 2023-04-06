@@ -34,6 +34,11 @@ const DataScreen = (props) => {
 		message.success("退出登录成功！")
 		navigate("/login")
 	}
+
+	/* 跳转至 3D 操作台 */
+	const toControler = () => {
+		navigate("/threedimension")
+	}
     
 	/* 开启或关闭页面背景音乐 */
 	const handleTo = () => {
@@ -82,7 +87,7 @@ const DataScreen = (props) => {
 					<div className="header-ct">
 						<div className="header-ct-title">
 							<span>随风飘飘游</span>
-							{/* <div className="header-ct-warning">平台高峰预警信息（2条）</div> */}
+							<div className="header-ct-warning" onClick={toControler}>跳转至 3D 操作台</div>
 						</div>
 					</div>
 					<div className="header-rg">

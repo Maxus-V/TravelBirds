@@ -36,9 +36,18 @@ export const rootRouter = [
 		path: "/threeDimension",
 		element: lazyLoad(React.lazy(() => import("@/pages/ThreeDimension"))),
 		meta: {
-			requiresAuth: false,
+			requiresAuth: true,
 			title: "三维模型",
 			key: "threeDimension"
+		}
+	},
+	{
+		path: "/threeDimensionV2",
+		element: lazyLoad(React.lazy(() => import("@/pages/ThreeDimensionV2"))),
+		meta: {
+			requiresAuth: true,
+			title: "三维模型V2",
+			key: "threeDimensionV2"
 		}
 	},
 	...routerArray,
