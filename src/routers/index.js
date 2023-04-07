@@ -45,7 +45,7 @@ export const rootRouter = [
 		path: "/threeDimensionV2",
 		element: lazyLoad(React.lazy(() => import("@/pages/ThreeDimensionV2"))),
 		meta: {
-			requiresAuth: true,
+			requiresAuth: false,
 			title: "三维模型V2",
 			key: "threeDimensionV2"
 		}
