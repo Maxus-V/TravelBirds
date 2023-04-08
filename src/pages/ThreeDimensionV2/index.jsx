@@ -7,7 +7,7 @@ const ThreeDimensionV2 = (props) => {
     return (
         <div className="data_bodey">
             <div className="index_nav">
-                <h1>3D 操作台</h1>
+                {/* <h1>3D 操作台</h1> */}
             </div>
             <div className="index_tabs">
                 <div className="inner">
@@ -19,7 +19,7 @@ const ThreeDimensionV2 = (props) => {
                         </div>
                         <div className="dataAllBorder01 cage_cl">
                             <div className='dataAllBorder02'>
-                                <Xbot />
+                                {/* <Xbot /> */}
                             </div>
                         </div>
                         <div className="dataAllBorder01 cage_cl">

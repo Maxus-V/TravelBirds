@@ -3,7 +3,7 @@
     height: 100%;
     background-size: 100% 100%;
     position: absolute;
-    background-color: #1D2362;
+    // background-color: #1D2362;
 
     .index_nav {
         font-size: 50px;
@@ -24,7 +24,7 @@
 .inner {
     display: flex;
 
-    .left_cage{
+    .left_cage,.center_cage, .right_cage{
         width: 22%;
         height: 100%;
         margin-left: 0.3%;
@@ -32,14 +32,6 @@
 
     .center_cage{
         width: 55.1%;
-        height: 100%;
-        margin-left: 0.3%;
-    }
-
-    .right_cage{
-        width: 22%;
-        height: 100%;
-        margin-left: 0.3%;
     }
 }
 
@@ -72,8 +64,10 @@
     height: 100%;
     position: relative;
     .option {
+        width: 100%;
         position: absolute;
-        top: 0;
-        left: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: space-evenly;
     }
 }

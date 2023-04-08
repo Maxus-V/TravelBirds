@@ -1,8 +1,7 @@
 import { useState } from "react"
-
-import { Button, Checkbox } from 'antd'
-
 import { use3D } from "@/hooks/use3D"
+import MenuFor3D from "./MenuFor3D"
+
 
 const options = {
     camera: {
@@ -34,28 +33,18 @@ const options = {
 }
 
 const Soldier = (props) => {
-    const [play, setPlay] = useState(true)
     const [data, setData] = useState(options)
-    const {SoldierCanvas, showModel, showSkeleton, deactivateAllActions, activateAllActions} = use3D('Soldier', data)
-    const changePlay = () => {
-        if (play) {
-            options.animationStep = 0
-            setData(options)
-        } else {
-            options.animationStep = 3
-            setData(options)
-        }
-        setPlay(pre => !pre)
-    }
+    const {SoldierCanvas, showModel, showSkeleton} = use3D('Soldier', data)
+    
     return (
         <div className="container">
             <div ref={SoldierCanvas}></div>
-            <div className="option">
-                <Button onClick={changePlay}>{play ? '暂停' : '播放'}</Button>
-                <Button onClick={showModel}>显示或隐藏</Button>
-                <Button onClick={showSkeleton}>显示或隐藏骨骼</Button>
-                <Button onClick={deactivateAllActions}>测试</Button>
-            </div>
+            <MenuFor3D 
+                options={options}
+                setData={setData}
+                showModel={showModel}
+                showSkeleton={showSkeleton}
+            />
         </div>
     )
 }

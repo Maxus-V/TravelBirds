@@ -17,10 +17,7 @@ export const use3D = (name, options, data) => {
     let camera, scene, clock, renderer
     //模型变量
     let model, skeleton, mixer
-    //动作变量
     const mixers = []
-    //动画帧变量
-    let idleAction, walkAction, runAction, actions
 
     const myCanvas = useRef(null)
 
@@ -84,18 +81,9 @@ export const use3D = (name, options, data) => {
             skeleton.visible = false
             scene.add( skeleton )
 
-            const animations = gltf.animations
             mixer = new THREE.AnimationMixer( model )
-            idleAction = mixer.clipAction( animations[ 0 ] )
-            walkAction = mixer.clipAction( animations[ 3 ] )
-            runAction = mixer.clipAction( animations[ 1 ] )
-            actions = [ idleAction, walkAction, runAction ]
-            activateAllActions()
+            mixer.clipAction( gltf.animations[ animationStep ] ).play()
             mixers.push( mixer )
-
-            // mixer = new THREE.AnimationMixer( model )
-            // mixer.clipAction( gltf.animations[ animationStep ] ).play()
-            // mixers.push( mixer )
             
             animate()
         }, undefined, (e) => {
@@ -127,29 +115,18 @@ export const use3D = (name, options, data) => {
 
     const animate = () => {
         requestAnimationFrame( animate )
-        const delta = clock.getDelta()
-        for ( const mixer of mixers ) mixer.update( delta )
+        let mixerUpdateDelta = clock.getDelta()
+        for ( const mixer of mixers ) mixer.update( mixerUpdateDelta )
         renderer.render( scene, camera )
     }
 
     const showModel = () => {
+        console.log('hi')
         model.visible = !model.visible
     }
 
     const showSkeleton = () => {
         skeleton.visible = !skeleton.visible
-    }
-
-    const activateAllActions = () => {
-        actions.forEach( ( action ) => {
-            action.play()
-        } )
-    }
-
-    const deactivateAllActions = () => {
-        actions.forEach( ( action ) => {
-            action.stop()
-        } )
     }
 
     useEffect(() => {
@@ -166,7 +143,5 @@ export const use3D = (name, options, data) => {
         [`${name}Canvas`]:myCanvas,
         showModel,
         showSkeleton,
-        deactivateAllActions,
-        activateAllActions,
     }
 }
