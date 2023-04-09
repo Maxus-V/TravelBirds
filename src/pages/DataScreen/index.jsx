@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "react"
+import { useLayoutEffect, useRef, useState } from "react"
 
 import Headertime from "./components/DataHeaderTime"
 import RealTimeAccessChart from "./components/RealTimeAccessChart"
@@ -10,7 +10,8 @@ import HotPlateChart from "./components/HotPlateChart"
 import AnnualUseChart from "./components/AnnualUseChart"
 import PlatformSourceChart from "./components/PlatformSourceChart"
 
-import { message } from "antd"
+import { message, Tooltip } from "antd"
+import { RedoOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom"
 import { connect } from "react-redux"
 import { setToken } from "@/redux/modules/global/action"
@@ -28,11 +29,22 @@ const DataScreen = (props) => {
 	const dataScreenRef = useRef(null)
 	const [onMusic, setOnMusic] = useAudio(music)
 
+	const [data, setData] = useState(null)
+
 	/* 退出登录 */
 	const logout = () => {
 		setToken("")
 		message.success("退出登录成功！")
 		navigate("/login")
+	}
+
+	const refreshData = () => {
+		let random1 = Math.random().toFixed(1)
+		let random2 = (1 - random1).toFixed(1)
+		setData({
+			man: random1,
+			woman: random2,
+		})
 	}
 
 	/* 跳转至 3D 操作台 */
@@ -87,6 +99,11 @@ const DataScreen = (props) => {
 					<div className="header-ct">
 						<div className="header-ct-title">
 							<span>随风飘飘游</span>
+							<Tooltip title="刷新男女比例数据" placement="right" color={'transparent'}>
+								<span className="redo" onClick={refreshData}>
+									<RedoOutlined />
+								</span>
+							</Tooltip>
 							<div className="header-ct-warning" onClick={toControler}>跳转至 3D 操作台</div>
 						</div>
 					</div>
@@ -112,7 +129,7 @@ const DataScreen = (props) => {
 								<img src={dataScreenTitle} alt="" />
 							</div>
 							<div className="dataScreen-main-chart">
-								<MaleFemaleRatioChart />
+								<MaleFemaleRatioChart testData={data} />
 							</div>
 						</div>
 						<div className="dataScreen-bottom">

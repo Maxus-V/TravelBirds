@@ -6,6 +6,7 @@
   "homepage": ".",
   "dependencies": {
     "@amap/amap-jsapi-loader": "^1.0.1",
+    "@ant-design/icons": "^5.0.1",
     "@babel/core": "^7.16.0",
     "@electron/remote": "^2.0.9",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
