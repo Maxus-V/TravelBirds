@@ -46,6 +46,7 @@ const DataScreen = (props) => {
 			man: random1,
 			woman: random2,
 		})
+		message.success("已刷新“男女比例”数据！")
 	}
 
 	/* 跳转至 3D 操作台 */
@@ -100,11 +101,9 @@ const DataScreen = (props) => {
 					<div className="header-ct">
 						<div className="header-ct-title">
 							<span>随风飘飘游</span>
-							<Tooltip title="刷新男女比例数据" placement="right" color={'transparent'}>
-								<span className="redo" onClick={refreshData}>
-									<RedoOutlined />
-								</span>
-							</Tooltip>
+							<span className="redo" onClick={refreshData}>
+								<RedoOutlined />
+							</span>
 							{/* <div className="header-ct-warning" onClick={toControler}>跳转至 3D 操作台</div> */}
 						</div>
 					</div>
