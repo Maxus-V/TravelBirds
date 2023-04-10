@@ -9,6 +9,7 @@ import OverNext30Chart from "./components/OverNext30Chart"
 import HotPlateChart from "./components/HotPlateChart"
 import AnnualUseChart from "./components/AnnualUseChart"
 import PlatformSourceChart from "./components/PlatformSourceChart"
+import AnimationEffect from "./components/AnimationEffect"
 
 import { message, Tooltip } from "antd"
 import { RedoOutlined } from '@ant-design/icons';
@@ -104,7 +105,7 @@ const DataScreen = (props) => {
 									<RedoOutlined />
 								</span>
 							</Tooltip>
-							<div className="header-ct-warning" onClick={toControler}>跳转至 3D 操作台</div>
+							{/* <div className="header-ct-warning" onClick={toControler}>跳转至 3D 操作台</div> */}
 						</div>
 					</div>
 					<div className="header-rg">
@@ -188,6 +189,7 @@ const DataScreen = (props) => {
 					</div>
 				</div>
 			</div>
+			<AnimationEffect />
 		</div>
 	)
 }

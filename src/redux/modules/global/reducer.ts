@@ -27,6 +27,8 @@ const globalState: GlobalState = {
 
 // global reducer
 const global = (state: GlobalState = globalState, action: AnyAction) =>
+	// 创建一个新的状态对象，然后返回这个新的状态对象
+	// 自动创建一个新的对象或数组，并将更新应用到正确的位置上，而不必手动编写深层次的更新逻辑
 	produce(state, draftState => {
 		switch (action.type) {
 			case types.SET_TOKEN:
