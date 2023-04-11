@@ -17,7 +17,7 @@ const Login = () => {
 				<div className="login-form">
 					<div className="login-logo">
 						<img className="login-icon" src={logo} alt="logo" />
-						<span className="logo-text">{t("login.title")}</span>
+						<span className="logo-text">{t("login.title")}</span> 
 					</div>
 					<LoginForm />
 				</div>
