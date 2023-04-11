@@ -1,134 +1,57 @@
-// app 模块，它控制应用程序的事件生命周期。
-// 事件调用app.on('eventName', callback)，方法调用app.functionName(arg)
-// BrowserWindow 模块，它创建和管理应用程序 窗口。
-// new BrowserWindow([options]) 事件和方法调用同app
-const {app, BrowserWindow, nativeImage, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron')
+const path = require('path')
 
-// const url = require('url');
-const path = require('path');
+let mainWindow
 
-// 添加一个createWindow()方法来将index.html加载进一个新的BrowserWindow实例。
-const createWindow = () => {
-  let win = new BrowserWindow({
-    width: 1080,// 窗口宽度
-    height: 1080, // 窗口高度
-    // maxHeight: 0,
-    // minWidth: 0,
-    // resizable: false,
-    title: '随风飘飘游', // 窗口标题,如果由loadURL()加载的HTML文件中含有标签<title>，该属性可忽略
-    // "string" || nativeImage.createFromPath('src/image/icons/256x256.ico')从位于 path 的文件创建新的 NativeImage 实例
-    icon: nativeImage.createFromPath('./public/favicon.ico'),
-    webPreferences: { // 网页功能设置
-      nodeIntegration: true, // 是否启用node集成 渲染进程的内容有访问node的能力
-      webviewTag: true, // 是否使用<webview>标签 在一个独立的 frame 和进程里显示外部 web 内容
-      webSecurity: false, // 禁用同源策略
-      nodeIntegrationInSubFrames: true, // 是否允许在子页面(iframe)或子窗口(child window)中集成Node.js
-      preload: path.join(__dirname, 'preload.js'),
-      enableRemoteModule: true,
-      //contextBridge API can only be used when contextIsolation is enabled 的解决方法
-      contextIsolation: true,
-    },
-    frame: true, //是否创建带边框窗口
-  })
-  if (process.platform === 'darwin') {
-    app.dock.setIcon('./public/favicon.ico');
-  }
-  // ipcMain.on('mainWindow:close', () => {
-  //   mainWindow.hide()
-  // })
-  // ipcMain.on('set-title', (event, title) => {
-  //   const webContents = event.sender
-  //   const win = BrowserWindow.fromWebContents(webContents)
-  //   win.setTitle(title)
-  // })
-
-  ipcMain.handle('ping', () => 'pong')
-
-  /* 
-   * 加载应用-----  electron-quick-start中默认的加载入口
-    win.loadURL(url.format({
-      pathname: path.join(__dirname, './build/index.html'),
-      protocol: 'file:',
-      slashes: true
-    }))
-  */
-
-  // 加载应用 --开发阶段  需要运行 npm run start
-  win.loadURL('http://localhost:3000/')
-
-  win.webContents.on('dom-ready', () => {
-    console.log('22222')
-  })
-
-  win.webContents.on('did-finish-load', () => {
-    console.log('11111')
-  })
-
-  // __dirname 字符串指向当前正在执行脚本的路径
-  // path.join API 将多个路径联结在一起，创建一个跨平台的路径字符串。
-  // win.loadURL(url.format({
-  //   pathname: path.join(__dirname, './build/index.html'),
-  //   protocol: 'file:',
-  //   slashes: true
-  // }));
-
-  // 解决应用启动白屏问题
-  win.on('ready-to-show', () => {
-    win.show();
-    win.focus();
-  });
-
-  win.on('close', (event) => {
-    const choice = dialog.showMessageBoxSync(win, {
-      type: 'question',
-      buttons: ['是的', '不了'],
-      title: '提示',
-      message: '是否退出 随风飘飘游 ？',
-      icon: nativeImage.createFromPath('./public/favicon.ico'),
+function createWindow () {
+    mainWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+        webPreferences: {
+        //   preload: path.join(__dirname, 'preload.js'),
+        webSecurity: false, // Electron 将遵循 Chromium 的同源策略，禁止跨域访问
+        nodeIntegration: true, // 是否在渲染进程中启用 Node.js 集成。如果启用，渲染进程将可以访问 Node.js 模块
+        enableRemoteModule: false, // 是否启用远程模块。如果启用，渲染进程将可以使用 `require('electron').remote` 来访问主进程中的模块。这个选项默认是禁用的，因为它可能会导致安全问题
+        contextIsolation: false, // 是否启用上下文隔离。如果启用，渲染进程将在一个沙箱环境中运行，不能直接访问 Node.js 模块和 Electron 模块。这个选项默认是禁用的，但是在安全性要求较高的情况下，可以启用它
+        }
     })
 
-    if (choice === 1) {
-      event.preventDefault()
-    }
-  })
+    mainWindow.webContents.openDevTools({
+        mode:'bottom'
+    })
 
-  // 当窗口关闭时发出。在你收到这个事件后，你应该删除对窗口的引用，并避免再使用它。
-  win.on('closed', () => {
-    win = null;
-  });
-};
+    // mainWindow.loadFile('index.html')报错的解决方法
+    mainWindow.loadFile(path.join(__dirname, 'index.html'))
 
-// 调用createWindow()函数来打开您的窗口。
-// 在 Electron 中，只有在 app 模块的 ready 事件被激发后才能创建浏览器窗口。
-// 您可以通过使用 app.whenReady() API来监听此事件。
-// 在whenReady()成功后调用createWindow()。
-app.whenReady().then(() => {
-  createWindow();
+    // mainWindow.setSize(1024, 768)
+    // mainWindow.setPosition(1000, 100)
+    // mainWindow.setResizable(false)
+    // mainWindow.setFullScreen(true)
 
-  // 当 Linux 和 Windows 应用在没有窗口打开时退出了，macOS 应用通常在没有打开任何窗口的情况下也继续运行，
-  // 并且在没有窗口可用的情况下激活应用时会打开新的窗口。
-  // 实现这个特性，则监听app模块的 activate 事件。如果没有任何浏览器窗口是打开的，则调用 createWindow() 方法。
-  // 因为窗口无法在 ready 事件前创建，你应当在你的应用初始化后仅监听 activate 事件，在 whenReady() 回调中附上您的事件监听器来完成这个操作
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
-});
+    mainWindow.on('closed', function () {
+        mainWindow = null
+    })
+    
+    mainWindow.on('minimize', () => {
+        console.log('Window minimized')
+    })
+}
 
-// 关闭所有窗口时退出应用
-// 在 window 和 Linux 上，关闭所有窗口通常会完全退出一个应用程序。
-app.on('window-all-closed', () => {
-  // macOS(darwin)
-  if (process.platform !== 'darwin') app.quit();
-});
+app.on('ready', createWindow)
 
-app.on('before-quit', () => {
-  console.log('555')
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
 })
 
-app.on('will-quit', () => {
-  console.log('666')
+app.on('activate', function () {
+  if (mainWindow === null) {
+    createWindow()
+  }
 })
 
-app.on('quit', () => {
-  console.log('777')
+ipcMain.on('message', (event, arg) => {
+  console.log(arg)
+  event.reply('message-reply', '收到消息')
 })
