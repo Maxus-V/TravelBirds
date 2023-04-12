@@ -16,7 +16,7 @@ import enUS from "antd/lib/locale/en_US"
 import './App.css'
 // import "moment/dist/locale/zh-cn"
 import useTheme from "@/hooks/useTheme"
-import { getBrowserLang } from "@/utils/util"
+import { getBrowserLang } from "@/utils/util" 
 
 const App = (props) => {
   const { language, assemblySize, themeConfig, setLanguage } = props
