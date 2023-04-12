@@ -1,9 +1,42 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, session, Menu, globalShortcut, Notification, autoUpdater } = require('electron')
+
 const path = require('path')
+const fs = require('fs')
+const https = require('https') 
+const { dialog } = require('electron')
+
+const notifier = require('node-notifier')
 
 let mainWindow
 
+
+const template = [
+    {
+        label: 'File',
+        submenu: [
+          { label: 'New', accelerator: 'CmdOrCtrl+N', click: () => console.log('New File') },
+          { label: 'Open', accelerator: 'CmdOrCtrl+O', click: () => console.log('Open File') },
+          { type: 'separator' },
+          { label: 'Quit', accelerator: 'CmdOrCtrl+Q', click: () => app.quit() }
+        ]
+      },
+    {
+    label: 'Edit',
+    submenu: [
+            { label: 'Cut', accelerator: 'CmdOrCtrl+X', role: 'cut' },
+            { label: 'Copy', accelerator: 'CmdOrCtrl+C', role: 'copy' },
+            { label: 'Paste', accelerator: 'CmdOrCtrl+V', role: 'paste' },
+            { type: 'separator' },
+            { label: 'Select All', accelerator: 'CmdOrCtrl+A', role: 'selectall' }
+        ]
+    }
+]
+
+const menu = Menu.buildFromTemplate(template)
+Menu.setApplicationMenu(menu)
+
 const createWindow = () => {
+    globalShortcut.register('CmdOrCtrl+Shift+D', () => console.log('Debugging'));
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
@@ -16,12 +49,38 @@ const createWindow = () => {
         }
     })
 
+    // mainWindow.loadFile('index.html')报错的解决方法
+    mainWindow.loadFile(path.join(__dirname, 'index.html'))
+
+    // mainWindow.webContents.on('did-finish-load', () => {
+    //     session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    //         details.requestHeaders['Origin'] = 'https://example.com' // 绕过跨域限制
+    //         callback({ cancel: false, requestHeaders: details.requestHeaders })
+    //     })
+    //     mainWindow.webContents.send('start-request') // 发送一个 start-request 消息给渲染进程，以触发网络请求
+    // })
+
+    mainWindow.webContents.on('did-finish-load', () => {
+        const notification = new Notification({
+            title: '通知',
+            body: 'Hello, Electron!'
+          })
+        notification.show()
+        // mainWindow.webContents.executeJavaScript(`
+        // navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+        //     .then(() => {
+        //     console.log('已获得摄像头和麦克风权限')
+        //     })
+        //     .catch(() => {
+        //     console.log('访问摄像头和麦克风权限被拒绝')
+        //     })
+        // `)
+    })
+
     mainWindow.webContents.openDevTools({
         mode:'bottom'
     })
 
-    // mainWindow.loadFile('index.html')报错的解决方法
-    mainWindow.loadFile(path.join(__dirname, 'index.html'))
 
     // mainWindow.setSize(1024, 768)
     // mainWindow.setPosition(1000, 100)
@@ -37,7 +96,43 @@ const createWindow = () => {
     })
 }
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+    createWindow()
+
+    //下载与更新
+    // autoUpdater.setFeedURL({
+    //     url: 'https://github.com/Maxus-V/maxus-v.github.io'
+    // })
+    // autoUpdater.autoDownload = false
+
+    // autoUpdater.on('update-available', function() {
+    //     dialog.showMessageBox(mainWindow, {
+    //       type: 'info',
+    //       title: 'Update Available',
+    //       message: 'A new version of the app is available. Do you want to download it now?',
+    //       buttons: ['Yes', 'No']
+    //     }, function(response) {
+    //       if (response === 0) {
+    //         autoUpdater.downloadUpdate()
+    //       }
+    //     })
+    // })
+
+    // autoUpdater.on('update-downloaded', function() {
+    //     dialog.showMessageBox(mainWindow, {
+    //       type: 'info',
+    //       title: 'Update Downloaded',
+    //       message: 'The update has been downloaded. Do you want to install it now?',
+    //       buttons: ['Yes', 'No']
+    //     }, function(response) {
+    //       if (response === 0) {
+    //         autoUpdater.quitAndInstall()
+    //       }
+    //     })
+    //   })
+
+    //   autoUpdater.checkForUpdates()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -51,7 +146,56 @@ app.on('activate', () => {
   }
 })
 
+app.on('will-quit', () => {
+    globalShortcut.unregisterAll() // 在应用程序退出时，注销所有快捷键
+})
+
+app.whenReady().then(() => {
+    app.setAppUserModelId(process.execPath)
+})
+
 ipcMain.on('message', (event, arg) => {
   console.log(arg)
   event.reply('message-reply', '收到消息')
 })
+
+ipcMain.on('read-file', (event, filePath) => {
+    fs.writeFile(filePath, 'Hello, world!', (err) => {
+        if (err) {
+          console.error(err)
+          return
+        }
+        console.log('File written successfully')
+      })
+    fs.readFile(filePath, 'utf-8', (err, data) => {
+      if (err) throw err;
+      event.reply('file-data', data);
+    })
+})
+
+ipcMain.on('fetch-data', (event, url) => {
+    createWindow()
+    https.get(url, (res) => {
+      let data = '';
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+      res.on('end', () => {
+        event.reply('data', data);
+      });
+    }).on('error', (err) => {
+      console.log('Error: ' + err.message)
+    })
+  })
+
+  ipcMain.on('notify', () => {
+    const notification = new Notification({
+      title: '有通知',
+      body: 'Hello, Electron!'
+    })
+    notification.show()
+    notifier.notify({
+        title: 'Notification Title',
+        message: 'Notification Body',
+    })
+  })

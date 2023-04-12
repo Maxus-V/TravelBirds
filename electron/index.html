@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <title>Electron Demo</title>
   </head>
+  <!-- <webview id="webview" src="https://jsonplaceholder.typicode.com/todos/1" preload="./preload.js"></webview> -->
   <body>
     <h1>Electron Demo</h1>
     <button id="send-message">发送消息到主进程</button>
+    <button id="read-file">读取文件和发送通知</button>
+    <button id="send-request">发送请求</button>
     <div id="message"></div>
     <script src="./renderer.js"></script>
   </body>
