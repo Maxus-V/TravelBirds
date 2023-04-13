@@ -33,6 +33,15 @@ export const rootRouter = [
 		}
 	},
 	// {
+	// 	path: "/dataMap",
+	// 	element: lazyLoad(React.lazy(() => import("@/pages/DataMap"))),
+	// 	meta: {
+	// 		requiresAuth: false,
+	// 		title: "随风飘飘游地图",
+	// 		key: "dataMap"
+	// 	}
+	// },
+	// {
 	// 	path: "/threeDimension",
 	// 	element: lazyLoad(React.lazy(() => import("@/pages/ThreeDimension"))),
 	// 	meta: {

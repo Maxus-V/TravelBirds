@@ -31,6 +31,24 @@
 			display: flex;
 			width: 100%;
 			height: 38px;
+			//top2bottom
+			opacity: 0;
+			transform: translateY(-100px); 
+			animation-name: top2bottom;
+			animation-duration: 1s;
+			animation-iteration-count: 1;
+			animation-delay: 2s;
+			animation-fill-mode: forwards;
+			@keyframes top2bottom {
+				0% {
+					opacity: 0;
+					transform: translateY(-100px); 
+				}
+				100% {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
 			.header-lf,
 			.header-rg {
 				position: relative;
@@ -137,6 +155,24 @@
 				width: 394px;
 				height: 100%;
 				margin-right: 40px;
+				//left2right
+				opacity: 0;
+				transform: translateX(-100px); 
+				animation-name: left2right;
+				animation-duration: 1s;
+				animation-iteration-count: 1;
+				animation-delay: 2s;
+				animation-fill-mode: forwards;
+				@keyframes left2right {
+					0% {
+						opacity: 0;
+						transform: translateX(-100px); 
+					}
+					100% {
+						opacity: 1;
+						transform: translateX(0);
+					}
+				}
 				.dataScreen-top,
 				.dataScreen-center,
 				.dataScreen-bottom {
@@ -191,6 +227,7 @@
 						letter-spacing: 5px;
 						background: url("./images/map-title-bg.webp") no-repeat;
 						background-size: 100% 100%;
+						
 					}
 					.dataScreen-alarm {
 						position: absolute;
@@ -230,6 +267,24 @@
 					padding-top: 54px;
 					background: url("./images/dataScreen-main-cb.webp") no-repeat;
 					background-size: 100% 100%;
+					//bottom2top
+					opacity: 0;
+					transform: translateY(100px); 
+					animation-name: bottom2top;
+					animation-duration: 1s;
+					animation-iteration-count: 1;
+					animation-delay: 2s;
+					animation-fill-mode: forwards;
+					@keyframes bottom2top {
+						0% {
+							opacity: 0;
+							transform: translateY(100px); 
+						}
+						100% {
+							opacity: 1;
+							transform: translateY(0);
+						}
+					}
 				}
 			}
 			.dataScreen-rg {
@@ -238,6 +293,24 @@
 				justify-content: space-between;
 				width: 394px;
 				height: 100%;
+				//right2left
+				opacity: 0;
+				transform: translateX(100px); 
+				animation-name: right2left;
+				animation-duration: 1s;
+				animation-iteration-count: 1;
+				animation-delay: 2s;
+				animation-fill-mode: forwards;
+				@keyframes right2left {
+					0% {
+						opacity: 0;
+						transform: translateX(100px); 
+					}
+					100% {
+						opacity: 1;
+						transform: translateX(0);
+					}
+				}
 				.dataScreen-top,
 				.dataScreen-center,
 				.dataScreen-bottom {
