@@ -14,6 +14,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@tweenjs/tween.js": "^19.0.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
     "antd": "^5.3.1",
@@ -29,6 +30,7 @@
     "concurrently": "^7.6.0",
     "css-loader": "^6.5.1",
     "css-minimizer-webpack-plugin": "^3.2.0",
+    "d3": "^7.8.4",
     "dayjs": "^1.11.7",
     "dotenv": "^10.0.0",
     "dotenv-expand": "^5.1.0",
@@ -182,7 +184,8 @@
     "electron-icon-builder": "^2.0.1",
     "nodemon": "^2.0.21",
     "progress-bar-webpack-plugin": "^2.1.0",
-    "typescript": "^5.0.2"
+    "typescript": "^5.0.2",
+    "webpack-obfuscator": "^3.5.1"
   },
   "build": {
     "appId": "20230101",

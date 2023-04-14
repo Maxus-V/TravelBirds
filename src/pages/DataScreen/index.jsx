@@ -4,7 +4,7 @@ import Headertime from "./components/DataHeaderTime"
 import RealTimeAccessChart from "./components/RealTimeAccessChart"
 import MaleFemaleRatioChart from "./components/MaleFemaleRatioChart"
 import AgeRatioChart from "./components/AgeRatioChart"
-import ChinaMapChart from "./components/ChinaMapChart"
+import ChinaMapChartV2 from "./components/ChinaMapChartV2"
 import OverNext30Chart from "./components/OverNext30Chart"
 import HotPlateChart from "./components/HotPlateChart"
 import AnnualUseChart from "./components/AnnualUseChart"
@@ -145,7 +145,7 @@ const DataScreen = (props) => {
 					<div className="dataScreen-ct">
 						<div className="dataScreen-map">
 							<div className="dataScreen-map-title">旅游航线实时监测</div>
-							<ChinaMapChart />
+							<ChinaMapChartV2 />
 						</div>
 						<div className="dataScreen-cb">
 							<div className="dataScreen-main-title">

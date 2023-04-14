@@ -17,6 +17,8 @@
 			height: 115px;
 			background: url("../../images/man-bg.webp") no-repeat;
 			background-size: 100% 100%;
+			transition-property: all;
+    		transition-duration: 0.6s;
 			cursor: pointer;
 			img {
 				width: 60px;
@@ -28,6 +30,11 @@
 				font-size: 13px;
 				color: #ffffff;
 			}
+		}
+		.man:hover,
+		.woman:hover {
+			transform: scale(1.2);
+			transition-timing-function: ease;
 		}
 		.man {
 			img {

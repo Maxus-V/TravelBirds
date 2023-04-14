@@ -214,7 +214,7 @@
 					.dataScreen-map-title {
 						position: absolute;
 						top: 10px;
-						left: 0;
+						left: 10px;
 						z-index: 99;
 						box-sizing: border-box;
 						display: flex;
@@ -227,7 +227,23 @@
 						letter-spacing: 5px;
 						background: url("./images/map-title-bg.webp") no-repeat;
 						background-size: 100% 100%;
-						
+						//zero2one
+						opacity: 0;
+						animation-name: zero2one;
+						animation-duration: 1s;
+						animation-iteration-count: 1;
+						animation-delay: 2.5s;
+						animation-fill-mode: forwards;
+						@keyframes zero2one {
+							0% {
+								opacity: 0;
+								transform: scale(0);
+							}
+							100% {
+								opacity: 1;
+								transform: scale(1);
+							}
+						}
 					}
 					.dataScreen-alarm {
 						position: absolute;

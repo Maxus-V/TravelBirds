@@ -1,0 +1,26 @@
+
+.content-box2 {
+    width: 100%;
+    height: 95%;
+    
+    .mapRef {
+        //zero2one
+        opacity: 0;
+        animation-name: MapRefAnimate;
+        animation-duration: 1s;
+        animation-iteration-count: 1;
+        animation-delay: 2s;
+        animation-fill-mode: forwards;
+        @keyframes MapRefAnimate {
+            0% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+                border: 3px solid #3a3ff5;
+            }
+        }
+    }
+}
