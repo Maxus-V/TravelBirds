@@ -8,19 +8,22 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader.js'
 
+import * as d3 from 'd3'
 import TWEEN from '@tweenjs/tween.js'
 
-import * as d3 from 'd3'
+import { getGeoJsonall } from '../../services/index'
+import mapJson from "../../assets/china.json"
 
 import "./ChinaMapChartV2.less"
 
-import { getGeoJsonall } from '../../services/index'
-
-import mapJson from "../../assets/china.json"
-
 let controls
-let renderer, scene, camera, bloomComposer, finalComposer
+let renderer, scene, camera, bloomComposer, finalComposer, lastPick
+
+// canvas节点及其父元素的宽、高、左边缘距、顶边缘距
+let canvasContainer, offsetWidth, offsetHeight, offsetLeft, offsetTop
+
 const BLOOM_LAYER = 1
+
 const bloomLayer = new THREE.Layers()
 bloomLayer.set(BLOOM_LAYER)
 const materials = {}
@@ -44,28 +47,34 @@ void main() {
 `
 
 
-const ChinaMapChartV2 = () => {
+const ChinaMapChartV2 = (props) => {
+
+    // 获取 DOM 节点，挂载 canvas
     const mapRef = useRef(null)
+
+    // 设置恒定变量，保存省份中心坐标
     const centerLatlng = useRef({})
 
     const init = (mapCurrent) => {
-        let offsetWidth = mapCurrent.parentNode.offsetWidth
-        let offsetHeight = mapCurrent.parentNode.offsetHeight
+        canvasContainer = mapCurrent
+        offsetWidth = mapCurrent.parentNode.offsetWidth
+        offsetHeight = mapCurrent.parentNode.offsetHeight
+        offsetLeft = mapCurrent.parentNode.offsetLeft
+        offsetTop = mapCurrent.parentNode.offsetTop
 
         // 三维世界
         scene = new THREE.Scene()
         scene.background = new THREE.Color('#000000')
 
-        //辅助观察的坐标系
-        // const axesHelper = new THREE.AxesHelper(150)
-        // scene.add(axesHelper)
+        // 辅助观察的坐标系
+        const axesHelper = new THREE.AxesHelper(150)
+        scene.add(axesHelper)
 
-        //设置点光源
+        // 设置点光源
         // const pointLight = new THREE.PointLight(0xffffff, 1.0)
         // pointLight.position.set(0, 30, 0)
         // scene.add(pointLight)
 
-        // 相机
         // 模拟人眼观察这个世界
         camera = new THREE.PerspectiveCamera(
             40, // 圆锥角度
@@ -92,9 +101,10 @@ const ChinaMapChartV2 = () => {
         renderer.shadowMap.type = THREE.PCFSoftShadowMap
         //解决canvas画布输出模糊问题
         renderer.setPixelRatio(window.devicePixelRatio)
-        // renderer.render(scene, camera) 相当于拿着照相机，对周围场景进行拍照操作
         renderer.setSize(offsetWidth, offsetHeight)
         mapCurrent.appendChild(renderer.domElement)
+        window.addEventListener( 'resize', onWindowResize )
+        // renderer.render(scene, camera) 相当于拿着照相机，对周围场景进行拍照操作
 
         // 辉光材质 泛光（Bloom）效果
         // 用于渲染场景和相机
@@ -160,12 +170,13 @@ const ChinaMapChartV2 = () => {
         render()
         renderanmi()
     }
+
     // 灯光
     const addlight = () => {
         // 平行光
-        var spotLight = new THREE.AmbientLight(0xcccccc)
+        let spotLight = new THREE.AmbientLight(0xcccccc)
         spotLight.position.set(-50, 60, 15)
-        spotLight.castShadow = true // 让光源产生阴影
+        // spotLight.castShadow = true // 让光源产生阴影
         spotLight.shadowCameraVisible = true
         scene.add(spotLight)
     }
@@ -175,6 +186,7 @@ const ChinaMapChartV2 = () => {
         // 添加辅助线-后期可以关闭
         // var axisHelper = new THREE.AxisHelper(500)
         // scene.add(axisHelper)
+        setRaycaster()
         setTerritory()
         addFloot()
         mouseMove()
@@ -184,7 +196,7 @@ const ChinaMapChartV2 = () => {
     // 几何体集合
     const setTerritory = () => {
         //新建圆柱体
-        const geometry1a = new THREE.CylinderBufferGeometry(29, 29, 1, 100, 1)
+        const geometry1a = new THREE.CylinderGeometry(29, 29, 1, 100, 1)
         
         // transparent 设置 true 开启透明
         // 物理材质
@@ -393,9 +405,12 @@ const ChinaMapChartV2 = () => {
         .scale(47) // 设置了缩放比例
         .translate([0, 0]) // 设置了平移距离
 
+        province.properties = e.properties
+
         e.forEach((item, index) => {
             // 从 item 对象中获取 geometry.coordinates[0]，这是一个包含多个坐标点的数组，表示该地区的边界
             let cod = item.geometry.coordinates[0]
+
             // 判断该地区是否有名称，如果有，就将其中心点坐标保存到 centerLatlng.current 对象中，以便后续使用
             if (item.properties.name) {
                 centerLatlng.current[item.properties.name] = item.properties.center
@@ -470,7 +485,7 @@ const ChinaMapChartV2 = () => {
                     opacity: 1,
                 })
                 const material1 = new THREE.MeshBasicMaterial({
-                    metalness: 0.3,
+                    // metalness: 0.3, // 目测属性已废弃
                     color: '#6b7280',
                     opacity: 1,
                 })
@@ -587,7 +602,7 @@ const ChinaMapChartV2 = () => {
         // 使用缓冲区对象来存储几何体数据的，因此可以更高效地渲染大量的圆锥体
         // 建一个 ConeBufferGeometry 几何体对象，表示一个圆锥体。ConeBufferGeometry 是 Three.js 中的一个内置几何体类，
         // 用于创建圆锥体。这里我们设置圆锥体的底部半径为 0.25，高度为 3.5，分段数为 5
-        const geometry = new THREE.ConeBufferGeometry(0.25, 3.5, 5)
+        const geometry = new THREE.ConeGeometry(0.25, 3.5, 5)
         const material1 = new THREE.MeshBasicMaterial({
             color: colors,
             transparent: true,
@@ -599,6 +614,68 @@ const ChinaMapChartV2 = () => {
         scene.add(cylinder)
         render()
     }
+
+    const circleYs = []
+    const spotCircle = (spot) => {
+        // 圆
+        const geometry1 = new THREE.CircleGeometry(0.5, 200)
+        const material1 = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide })
+        const circle = new THREE.Mesh(geometry1, material1)
+        // 绘制地图时 y轴取反 这里同步
+        circle.position.set(spot[0], -spot[1], spot[2] + 0.1)
+        scene.add(circle)
+
+        // 圆环
+        const geometry2 = new THREE.RingGeometry(0.5, 0.7, 50)
+        // transparent 设置 true 开启透明
+        const material2 = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide, transparent: true })
+        const circleY = new THREE.Mesh(geometry2, material2)
+        circleY.position.set(spot[0], -spot[1], spot[2] + 0.1)
+        scene.add(circleY)
+
+        circleYs.push(circleY)
+    }
+
+    const lineConnect = (posStart, posEnd) => {
+        // 根据目标坐标设置3D坐标  z轴位置在地图表面
+        const [x0, y0, z0] = [...posStart, 10.01]
+        const [x1, y1, z1] = [...posEnd, 10.01]
+
+        // 使用QuadraticBezierCurve3() 创建 三维二次贝塞尔曲线
+        const curve = new THREE.QuadraticBezierCurve3(
+            new THREE.Vector3(x0, -y0, z0),
+            new THREE.Vector3((x0 + x1) / 2, -(y0 + y1) / 2, 20),
+            new THREE.Vector3(x1, -y1, z1)
+        )
+
+        // 绘制 目标位置
+        spotCircle([x0, y0, z0])
+        spotCircle([x1, y1, z1])
+
+        const lineGeometry = new THREE.BufferGeometry()
+        // 获取曲线 上的50个点
+        let points = curve.getPoints(50)
+        let positions = []
+        let colors = []
+        let color = new THREE.Color()
+
+        // 给每个顶点设置演示 实现渐变
+        for (let j = 0; j < points.length; j++) {
+            color.setHSL(0.81666 + j, 0.88, 0.715 + j * 0.0025) // 粉色
+            colors.push(color.r, color.g, color.b)
+            positions.push(points[j].x, points[j].y, points[j].z)
+        }
+
+        // 放入顶点 和 设置顶点颜色
+        lineGeometry['position'] = new THREE.BufferAttribute(new Float32Array(positions), 3, true)
+        lineGeometry['color'] = new THREE.BufferAttribute(new Float32Array(colors), 3, true)
+
+        const material = new THREE.LineBasicMaterial({ vertexColors: 2, side: THREE.DoubleSide, color: '#13154f', })
+        const line = new THREE.Line(lineGeometry, material)
+
+        return line
+    }
+
 
     const CameraAnmition = () => {
         // 使用 Tween.js 库创建了三个 Tween 对象，分别表示相机从一个位置移动到另一个位置的动画
@@ -652,6 +729,23 @@ const ChinaMapChartV2 = () => {
         tween1.onUpdate(update)
         return tween1
     }
+
+    let raycaster
+    let mouse
+    const setRaycaster = () => {
+        raycaster = new THREE.Raycaster()
+        mouse = new THREE.Vector2()
+        
+        const onMouseMove = (event) => {
+            // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 to +1)
+            if (event.clientX > 415 && event.clientY > 85 && event.clientY < 450 && event.clientX < 1030) {
+                mouse.x = (event.clientX / offsetWidth) * 2 - 1
+                mouse.y = -(event.clientY / offsetHeight) * 2 + 1
+            }
+            
+        }
+        window.addEventListener('mousemove', onMouseMove, false)
+    }
   
     let test = 0
     // 用于更新场景中的动画效果。具体来说，该函数会在每一帧更新时被调用
@@ -661,9 +755,30 @@ const ChinaMapChartV2 = () => {
         // 接下来，我们调用 TWEEN.update() 方法，以更新 Tween.js 库中的 Tween 对象。然后，我们调用 controls.update() 方法，以更新 OrbitControls 对象
         TWEEN.update()
         controls.update()
+
+        raycaster.setFromCamera(mouse, camera)
+        const intersects = raycaster.intersectObjects(
+            scene.children,
+            true
+        )
+        // 恢复上一次清空的
+        if (lastPick) {
+            lastPick.object.material[0].color.set('#1e293b')
+            lastPick.object.material[1].color.set('#1e293b')
+        }
+        lastPick = null
+        lastPick = intersects.find(
+            (item) => item.object.material && item.object.material.length === 2
+        )
+        if (lastPick) {
+            lastPick.object.material[0].color.set(0x05e8fe)
+            lastPick.object.material[1].color.set(0x05e8fe)
+        }
+
         // 调用 render() 方法，以渲染场景中的所有物体。最后，我们使用 window.requestAnimationFrame() 方法请求下一帧的渲染，并将其赋值给 test 变量。如果 test 小于 1000，那么就会继续请求下一帧的渲染，否则就会停止渲染
         render()
-        if (test < 1000) test = window.requestAnimationFrame(renderanmi)
+        // if (test < 1000) test = window.requestAnimationFrame(renderanmi)
+        test = window.requestAnimationFrame(renderanmi)
     }
     // 渲染
     const render = () => {
@@ -674,6 +789,17 @@ const ChinaMapChartV2 = () => {
         scene.traverse(restoreMaterial)
         // 4. 用 finalComposer 作最后渲染
         finalComposer.render()
+
+        circleYs.forEach((mesh) => {
+            // 目标 圆环放大 并 透明
+            mesh._s += 0.01
+            mesh.scale.set(1 * mesh._s, 1 * mesh._s, 1 * mesh._s)
+            if (mesh._s <= 2) {
+                mesh.material.opacity = 2 - mesh._s
+            } else {
+                mesh._s = 1
+            }
+        })
     }
 
     // 用于将不在 bloomLayer 中的物体材质变暗。具体来说，该函数会遍历场景中的所有物体，如果该物体的材质存在且不在 bloomLayer 中，那么就将其材质变暗
@@ -706,6 +832,13 @@ const ChinaMapChartV2 = () => {
             obj.material = materials[obj.uuid]
             delete materials[obj.uuid]
         }
+    }
+
+    const onWindowResize = () => {
+        console.log('hi', canvasContainer)
+        camera.aspect = 1
+        camera.updateProjectionMatrix()
+        // renderer.setSize( offsetWidth, offsetHeight )
     }
 
 	useEffect(() => {
