@@ -18,9 +18,12 @@ import "./ChinaMapChartV2.less"
 
 let controls
 let renderer, scene, camera, bloomComposer, finalComposer, lastPick
+let raycaster
+let mouse
+const circleYs = []
 
 // canvas节点及其父元素的宽、高、左边缘距、顶边缘距
-let canvasContainer, offsetWidth, offsetHeight, offsetLeft, offsetTop
+let canvasContainer, offsetWidth, offsetHeight, offsetLeft, offsetTop, innerWidth, innerHeight
 
 const BLOOM_LAYER = 1
 
@@ -29,6 +32,7 @@ bloomLayer.set(BLOOM_LAYER)
 const materials = {}
 const darkMaterials = {}
 const clock = new THREE.Clock()
+let test = 0
 
 const vs = `
 varying vec2 vUv;
@@ -52,6 +56,8 @@ const ChinaMapChartV2 = (props) => {
     // 获取 DOM 节点，挂载 canvas
     const mapRef = useRef(null)
 
+    const tipRef = useRef(null)
+
     // 设置恒定变量，保存省份中心坐标
     const centerLatlng = useRef({})
 
@@ -61,6 +67,8 @@ const ChinaMapChartV2 = (props) => {
         offsetHeight = mapCurrent.parentNode.offsetHeight
         offsetLeft = mapCurrent.parentNode.offsetLeft
         offsetTop = mapCurrent.parentNode.offsetTop
+        innerWidth = window.innerWidth
+        innerHeight = window.innerHeight
 
         // 三维世界
         scene = new THREE.Scene()
@@ -405,11 +413,10 @@ const ChinaMapChartV2 = (props) => {
         .scale(47) // 设置了缩放比例
         .translate([0, 0]) // 设置了平移距离
 
-        province.properties = e.properties
-
         e.forEach((item, index) => {
             // 从 item 对象中获取 geometry.coordinates[0]，这是一个包含多个坐标点的数组，表示该地区的边界
             let cod = item.geometry.coordinates[0]
+            
 
             // 判断该地区是否有名称，如果有，就将其中心点坐标保存到 centerLatlng.current 对象中，以便后续使用
             if (item.properties.name) {
@@ -499,10 +506,14 @@ const ChinaMapChartV2 = (props) => {
                 mesh.receiveShadow = true
                 mesh._color = color
                 mesh.rotation.x = -0.5 * Math.PI
+                mesh.properties = item.properties
                 province.add(mesh)
             })
         })
+
         scene.add(province)
+        const line = lineConnect(projection(centerLatlng.current['北京市']), projection(centerLatlng.current['广东省']))
+        scene.add(line)
         render()
     }
 
@@ -615,7 +626,7 @@ const ChinaMapChartV2 = (props) => {
         render()
     }
 
-    const circleYs = []
+    
     const spotCircle = (spot) => {
         // 圆
         const geometry1 = new THREE.CircleGeometry(0.5, 200)
@@ -637,9 +648,11 @@ const ChinaMapChartV2 = (props) => {
     }
 
     const lineConnect = (posStart, posEnd) => {
+        console.log('posStart, posEnd', posStart, posEnd)
         // 根据目标坐标设置3D坐标  z轴位置在地图表面
-        const [x0, y0, z0] = [...posStart, 10.01]
-        const [x1, y1, z1] = [...posEnd, 10.01]
+        const [x0, y0, z0] = [8.535504694343786, -3.43180172321248733, 10.01]
+        const [x1, y1, z1] = [5.972341102748558, -3.81653550771486, 10.01]
+        
 
         // 使用QuadraticBezierCurve3() 创建 三维二次贝塞尔曲线
         const curve = new THREE.QuadraticBezierCurve3(
@@ -672,8 +685,10 @@ const ChinaMapChartV2 = (props) => {
 
         const material = new THREE.LineBasicMaterial({ vertexColors: 2, side: THREE.DoubleSide, color: '#13154f', })
         const line = new THREE.Line(lineGeometry, material)
-
+        console.log('line', line)
         return line
+
+        
     }
 
 
@@ -730,8 +745,7 @@ const ChinaMapChartV2 = (props) => {
         return tween1
     }
 
-    let raycaster
-    let mouse
+    
     const setRaycaster = () => {
         raycaster = new THREE.Raycaster()
         mouse = new THREE.Vector2()
@@ -739,15 +753,17 @@ const ChinaMapChartV2 = (props) => {
         const onMouseMove = (event) => {
             // 将鼠标位置归一化为设备坐标。x 和 y 方向的取值范围是 (-1 to +1)
             if (event.clientX > 415 && event.clientY > 85 && event.clientY < 450 && event.clientX < 1030) {
-                mouse.x = (event.clientX / offsetWidth) * 2 - 1
-                mouse.y = -(event.clientY / offsetHeight) * 2 + 1
+                mouse.x = (event.clientX / window.innerWidth) * 2 - 1
+                mouse.y = -(event.clientY / window.innerHeight) * 2.5 + 1
+                tipRef.current.style.left = event.clientX + 2 + 'px'
+                tipRef.current.style.top = event.clientY + 2 + 'px'
             }
             
         }
         window.addEventListener('mousemove', onMouseMove, false)
     }
   
-    let test = 0
+    
     // 用于更新场景中的动画效果。具体来说，该函数会在每一帧更新时被调用
     const renderanmi = () => {
         // 在函数内部，我们首先获取了当前时间与上一帧时间的差值 dt，以便在动画中使用。然后，我们使用 Date.now() 获取当前时间，并将其赋值给 start 变量，以便在下一帧更新时计算帧率
@@ -756,24 +772,7 @@ const ChinaMapChartV2 = (props) => {
         TWEEN.update()
         controls.update()
 
-        raycaster.setFromCamera(mouse, camera)
-        const intersects = raycaster.intersectObjects(
-            scene.children,
-            true
-        )
-        // 恢复上一次清空的
-        if (lastPick) {
-            lastPick.object.material[0].color.set('#1e293b')
-            lastPick.object.material[1].color.set('#1e293b')
-        }
-        lastPick = null
-        lastPick = intersects.find(
-            (item) => item.object.material && item.object.material.length === 2
-        )
-        if (lastPick) {
-            lastPick.object.material[0].color.set(0x05e8fe)
-            lastPick.object.material[1].color.set(0x05e8fe)
-        }
+        aboutLastPick()
 
         // 调用 render() 方法，以渲染场景中的所有物体。最后，我们使用 window.requestAnimationFrame() 方法请求下一帧的渲染，并将其赋值给 test 变量。如果 test 小于 1000，那么就会继续请求下一帧的渲染，否则就会停止渲染
         render()
@@ -800,6 +799,8 @@ const ChinaMapChartV2 = (props) => {
                 mesh._s = 1
             }
         })
+
+        canvasContainer = mapRef.current
     }
 
     // 用于将不在 bloomLayer 中的物体材质变暗。具体来说，该函数会遍历场景中的所有物体，如果该物体的材质存在且不在 bloomLayer 中，那么就将其材质变暗
@@ -835,10 +836,38 @@ const ChinaMapChartV2 = (props) => {
     }
 
     const onWindowResize = () => {
-        console.log('hi', canvasContainer)
         camera.aspect = 1
         camera.updateProjectionMatrix()
         // renderer.setSize( offsetWidth, offsetHeight )
+    }
+
+    const aboutLastPick = () => {
+        raycaster.setFromCamera(mouse, camera)
+        const intersects = raycaster.intersectObjects(
+            scene.children,
+            true
+        )
+        // 恢复上一次清空的
+        if (lastPick) {
+            lastPick.object.material[0].color.set('#1e293b')
+            lastPick.object.material[1].color.set('#1e293b')
+        }
+        lastPick = null
+        lastPick = intersects.find(
+            (item) => item.object.material && item.object.material.length === 2
+        )
+        if (lastPick) {
+            lastPick.object.material[0].color.set(0x05e8fe)
+            lastPick.object.material[1].color.set(0x05e8fe)
+        }
+
+        if (lastPick) {
+            const properties = lastPick.object.properties
+            tipRef.current.textContent = properties.name
+            tipRef.current.style.visibility = 'visible'
+        } else {
+            tipRef.current.style.visibility = 'hidden'
+        }
     }
 
 	useEffect(() => {
@@ -861,6 +890,7 @@ const ChinaMapChartV2 = (props) => {
 	return (
 		<div className="content-box2">
             <div className="mapRef" ref={mapRef}></div>
+            <div className="tipRef" ref={tipRef}>2222</div>
 		</div>
 	)
 }
