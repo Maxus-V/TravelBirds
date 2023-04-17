@@ -5,6 +5,7 @@ import RealTimeAccessChart from "./components/RealTimeAccessChart"
 import MaleFemaleRatioChart from "./components/MaleFemaleRatioChart"
 import AgeRatioChart from "./components/AgeRatioChart"
 import ChinaMapChartV2 from "./components/ChinaMapChartV2"
+import ChinaMapChartV3 from "./components/ChinaMapChartV3"
 import OverNext30Chart from "./components/OverNext30Chart"
 import HotPlateChart from "./components/HotPlateChart"
 import AnnualUseChart from "./components/AnnualUseChart"
@@ -145,7 +146,8 @@ const DataScreen = (props) => {
 					<div className="dataScreen-ct">
 						<div className="dataScreen-map">
 							<div className="dataScreen-map-title">旅游航线实时监测</div>
-							<ChinaMapChartV2 />
+							{/* <ChinaMapChartV2 /> */}
+							<ChinaMapChartV3 />
 						</div>
 						<div className="dataScreen-cb">
 							<div className="dataScreen-main-title">
@@ -188,7 +190,8 @@ const DataScreen = (props) => {
 					</div>
 				</div>
 			</div>
-			<AnimationEffect />
+			{/* 开屏动画效果 */}
+			{/* <AnimationEffect /> */}
 		</div>
 	)
 }

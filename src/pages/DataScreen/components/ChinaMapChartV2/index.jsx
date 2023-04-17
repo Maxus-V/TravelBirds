@@ -22,6 +22,9 @@ let raycaster
 let mouse
 const circleYs = []
 
+let currentPos = 0
+let pointSpeed = 20
+
 // canvas节点及其父元素的宽、高、左边缘距、顶边缘距
 let canvasContainer, offsetWidth, offsetHeight, offsetLeft, offsetTop, innerWidth, innerHeight
 
@@ -49,6 +52,46 @@ void main() {
   gl_FragColor = ( texture2D( baseTexture, vUv ) + vec4( 1.0 ) * texture2D( bloomTexture, vUv ) );
 }
 `
+
+const params = {
+    pointSize: 2.0,
+    pointColor: '#4ec0e9'
+  }
+
+const vertexShader = `
+    attribute float aOpacity;
+    uniform float uSize;
+    varying float vOpacity;
+
+    void main(){
+        gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0);
+        gl_PointSize = uSize;
+
+        vOpacity=aOpacity;
+    }
+    `
+
+    const fragmentShader = `
+    varying float vOpacity;
+    uniform vec3 uColor;
+
+    float invert(float n){
+        return 1.-n;
+    }
+
+    void main(){
+      if(vOpacity <=0.2){
+          discard;
+      }
+      vec2 uv=vec2(gl_PointCoord.x,invert(gl_PointCoord.y));
+      vec2 cUv=2.*uv-1.;
+      vec4 color=vec4(1./length(cUv));
+      color*=vOpacity;
+      color.rgb*=uColor;
+      
+      gl_FragColor=color;
+    }
+    `
 
 
 const ChinaMapChartV2 = (props) => {
@@ -425,6 +468,7 @@ const ChinaMapChartV2 = (props) => {
             // 判断该地区是否为广东省或北京市，如果是，就调用 dotBarlight() 函数添加标记点
             if (
                 item.properties.name == '广东省' ||
+                item.properties.name == '上海市' ||
                 item.properties.name == '北京市'
             ) {
                 // dotBarlight() 函数接受两个参数：标记点的坐标和颜色
@@ -432,7 +476,7 @@ const ChinaMapChartV2 = (props) => {
                 // 如果该地区是北京市，则标记点的颜色为 '#008c8c'，否则为 'yellow'
                 dotBarlight(
                     projection(item.properties.center),
-                    item.properties.name == '北京市' ? '#008c8c' : 'yellow',
+                    item.properties.name == '北京市' ? 'red' : item.properties.name == '上海市' ? 'yellow': '#008c8c',
                 )
             }
             // 判断该地区的坐标点数组长度是否大于 1，如果是，就将其转换为一个包含一个数组的数组，以便后续使用
@@ -512,10 +556,15 @@ const ChinaMapChartV2 = (props) => {
         })
 
         scene.add(province)
-        const line = lineConnect(projection(centerLatlng.current['北京市']), projection(centerLatlng.current['广东省']))
-        scene.add(line)
+        // const line = lineConection(projection([106.557691, 29.559296]), projection([121.495721, 31.236797]))
+        // scene.add(line)
         render()
     }
+
+    const lines = []
+    const geometry = new THREE.BufferGeometry()
+    let positions = null
+    let opacitys = null
 
     // 地图描边
     const setmapborder = (e) => {
@@ -535,13 +584,13 @@ const ChinaMapChartV2 = (props) => {
                 const lineGeometry = new THREE.BufferGeometry()
                 const pointsArray = new Array()
                 for (let i = 0; i < polygon.length; i++) {
-                // projection -- 坐标转化
-                let [x, y] = projection(polygon[i])
-                pointsArray.push(new THREE.Vector3(x, -y, 3))
-                if (i === 0) {
-                    shape.moveTo(x, -y)
-                }
-                shape.lineTo(x, -y)
+                    // projection -- 坐标转化
+                    let [x, y] = projection(polygon[i])
+                    pointsArray.push(new THREE.Vector3(x, -y, 3))
+                    if (i === 0) {
+                        shape.moveTo(x, -y)
+                    }
+                    shape.lineTo(x, -y)
                 }
 
                 // 添加多个线
@@ -558,9 +607,32 @@ const ChinaMapChartV2 = (props) => {
                 lines.scale.set(1, 1, 1)
                 lines.layers.enable(1)
                 scene.add(lines)
+                province.add(lines)
             })
         })
+
+        positions = new Float32Array(lines.flat(1))
+        // 设置顶点
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+        // 设置 粒子透明度为 0
+        opacitys = new Float32Array(positions.length).map(() => 0)
+        geometry.setAttribute('aOpacity', new THREE.BufferAttribute(opacitys, 1))
         scene.add(province)
+        const material = new THREE.ShaderMaterial({
+            vertexShader: vertexShader,
+            fragmentShader: fragmentShader,
+            transparent: true, // 设置透明
+            uniforms: {
+              uSize: {
+                value: params.pointSize
+              },
+              uColor: {
+                value: new THREE.Color(params.pointColor)
+              }
+            }
+          })
+        const points = new THREE.Points(geometry, material)
+        scene.add(points)
         render()
     }
 
@@ -598,6 +670,7 @@ const ChinaMapChartV2 = (props) => {
         circleY3.scale.set(2, 2, 1)
         circleY3.rotation.x = -0.5 * Math.PI
         circleY3.layers.enable(1)
+        circleYs.push(circleY3)
         scene.add(circleY3)
     }
 
@@ -624,6 +697,41 @@ const ChinaMapChartV2 = (props) => {
         cylinder.layers.enable(1)
         scene.add(cylinder)
         render()
+    }
+
+    const lineConection = (posStart, posEnd) => {
+        const [x0, y0, z0] = [...posStart, 10.01]
+        const [x1, y1, z1] = [...posEnd, 10.01]
+
+        // 使用QuadraticBezierCurve3() 创建 三维二次贝塞尔曲线
+        const curve = new THREE.QuadraticBezierCurve3(
+            new THREE.Vector3(x0, -y0, z0),
+            new THREE.Vector3((x0 + x1) / 2, -(y0 + y1) / 2, 20),
+            new THREE.Vector3(x1, -y1, z1)
+        )
+
+        const lineGeometry = new THREE.BufferGeometry()
+        // 获取曲线 上的50个点
+        var points = curve.getPoints(500)
+        var positions = []
+        var colors = []
+        var color = new THREE.Color()
+
+        // 给每个顶点设置演示 实现渐变
+        for (var j = 0; j < points.length; j++) {
+            color.setHSL(0.81666 + j, 0.88, 0.715 + j * 0.0025) // 粉色
+            colors.push(color.r, color.g, color.b)
+            positions.push(points[j].x, points[j].y, points[j].z)
+        }
+
+        lineGeometry['position'] = new THREE.BufferAttribute(new Float32Array(positions), 3, true)
+        lineGeometry['color'] = new THREE.BufferAttribute(new Float32Array(colors), 3, true)
+
+        const material = new THREE.LineBasicMaterial({ vertexColors: 2, side: THREE.DoubleSide, color: '#13154f', })
+        const line = new THREE.Line(lineGeometry, material)
+
+        console.log(x0, y0, z0, x1, y1, z1, curve)
+        return line
     }
 
     
@@ -774,11 +882,27 @@ const ChinaMapChartV2 = (props) => {
 
         aboutLastPick()
 
+        xuanguang()
         // 调用 render() 方法，以渲染场景中的所有物体。最后，我们使用 window.requestAnimationFrame() 方法请求下一帧的渲染，并将其赋值给 test 变量。如果 test 小于 1000，那么就会继续请求下一帧的渲染，否则就会停止渲染
         render()
         // if (test < 1000) test = window.requestAnimationFrame(renderanmi)
         test = window.requestAnimationFrame(renderanmi)
     }
+
+    const xuanguang = () => {
+        if (geometry.attributes.position) {
+            currentPos += pointSpeed
+            for (let i = 0; i < pointSpeed; i++) {
+              opacitys[(currentPos - i) % lines.length] = 0
+            }
+      
+            for (let i = 0; i < 200; i++) {
+              opacitys[(currentPos + i) % lines.length] = i / 50 > 2 ? 2 : i / 50
+            }
+            geometry.attributes.aOpacity.needsUpdate = true
+        }
+    }
+
     // 渲染
     const render = () => {
         scene.traverse(darkenNonBloomed2)
@@ -792,7 +916,7 @@ const ChinaMapChartV2 = (props) => {
         circleYs.forEach((mesh) => {
             // 目标 圆环放大 并 透明
             mesh._s += 0.01
-            mesh.scale.set(1 * mesh._s, 1 * mesh._s, 1 * mesh._s)
+            mesh.scale.set(5 * mesh._s, 5 * mesh._s, 5 * mesh._s)
             if (mesh._s <= 2) {
                 mesh.material.opacity = 2 - mesh._s
             } else {
