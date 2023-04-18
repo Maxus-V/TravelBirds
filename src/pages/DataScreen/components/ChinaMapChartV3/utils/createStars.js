@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 
-const r = 450
+const r = 45
 const parameters = [[ 1.25, 0x000833, 0.8 ],
     [ 3.0, 0xaaaaaa, 0.75 ], [ 3.5, 0xffffff, 0.5 ], 
     [ 4.5, 0xffffff, 0.25 ], [ 5.5, 0xffffff, 0.125 ]
@@ -32,27 +32,25 @@ export const createGeometry = () => {
 //     [ 3.0, 0xaaaaaa, 0.75 ], [ 3.5, 0xffffff, 0.5 ], [ 4.5, 0xffffff, 0.25 ], [ 5.5, 0xffffff, 0.125 ]];
 export const createLine = (geometry, scene) => {
     for ( let i = 0; i < parameters.length; ++ i ) {
-
-        const p = parameters[ i ];
-
-        const material = new THREE.LineBasicMaterial( { color: p[ 1 ], opacity: p[ 2 ] } );
-
-        const line = new THREE.LineSegments( geometry, material );
-        line.scale.x = line.scale.y = line.scale.z = p[ 0 ];
-        line.userData.originalScale = p[ 0 ];
-        line.rotation.y = Math.random() * Math.PI;
-        line.updateMatrix();
+        const p = parameters[ i ]
+        const material = new THREE.LineBasicMaterial( { color: p[ 1 ], opacity: p[ 2 ] } )
+        const line = new THREE.LineSegments( geometry, material )
+        line.scale.x = line.scale.y = line.scale.z = p[ 0 ]
+        line.userData.originalScale = p[ 0 ]
+        line.rotation.y = Math.random() * Math.PI
+        line.updateMatrix()
+        line.canRotate = true
         scene.add( line )
     }
 }
 
-export const createStars = (scene) => {
+export const createStar = (scene) => {
     // 星空运动效果
     const time = Date.now() * 0.0001
     for ( let i = 0; i < scene.children.length; i ++ ) {
         const object = scene.children[ i ]
         // 循环遍历场景中的所有子对象，对于每个是Line类型的对象，进行特效处理
-        if ( object.isLine ) {
+        if ( object.isLine && object.canRotate ) {
             // 计算出每个对象的旋转角度
             // 根据对象的索引值（i）来确定旋转方向
             object.rotation.y = time * ( i < 4 ? ( i + 1 ) : - ( i + 1 ) )

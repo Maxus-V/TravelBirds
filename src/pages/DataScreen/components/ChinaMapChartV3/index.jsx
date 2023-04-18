@@ -8,7 +8,7 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader.js'
 
-import * as d3 from 'd3'
+
 import TWEEN from '@tweenjs/tween.js'
 
 import { getGeoJsonall } from '../../services/index'
@@ -17,18 +17,21 @@ import mapJson from "../../assets/china.json"
 // import init from "./utils/init"
 import "./ChinaMapChartV3.less"
 
-import { createGeometry, createLine, createStars } from './utils/starsEffect'
+import { createGeometry, createLine, createStar } from './utils/createStars'
+import { setMapDom, setShining, setLighting } from "./utils/createMaps"
 
 let mapRefCurrent = null
-let camera, scene, renderer
+let camera, scene, renderer, controls
 
 const ChinaMapChartV3 = (props) => {
     // 获取 DOM 节点，挂载 canvas
     const mapRef = useRef(null)
 
     const init = () => {
-        camera = new THREE.PerspectiveCamera( 80, 1, 1, 3000 )
-		camera.position.z = 1000
+        camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 0.01, 1000 )
+		// camera.position.z = 1000
+        camera.position.set(30.9, 21.7, 37.4)
+        camera.lookAt(0, 0, 0)
 
         scene = new THREE.Scene()
         const geometry = createGeometry()
@@ -39,20 +42,29 @@ const ChinaMapChartV3 = (props) => {
         renderer.setSize( mapRefCurrent.parentNode.offsetWidth, mapRefCurrent.parentNode.offsetHeight )
 
         mapRefCurrent.appendChild( renderer.domElement )
+        mouseMove()
     }
     const animate = () => {
         requestAnimationFrame( animate )
         render()
     }
 
+    const mouseMove = () => {
+        controls = new OrbitControls(camera, renderer.domElement) //创建控件对象
+        controls.addEventListener('change', render)
+    }
+
     const render = () => {
         renderer.render( scene, camera )
-        createStars(scene)
+        createStar(scene)
+        setShining(scene, camera, renderer)
+        setLighting()
     }
 
 	useEffect(() => {
         mapRefCurrent = mapRef.current
         init()
+        setMapDom(mapJson.features, scene)
         animate()
         return () => {
             mapRefCurrent.innerHTML = ""
