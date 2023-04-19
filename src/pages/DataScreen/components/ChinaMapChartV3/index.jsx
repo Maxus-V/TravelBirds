@@ -18,14 +18,15 @@ import mapJson from "../../assets/china.json"
 import "./ChinaMapChartV3.less"
 
 import { createGeometry, createLine, createStar } from './utils/createStars'
-import { setMapDom, setShining, setLighting } from "./utils/createMaps"
+import { setMapDom, setShining, setLighting, setMoveSpot, setRaycaster } from "./utils/createMaps"
 
-let mapRefCurrent = null
+let mapRefCurrent, tipRefCurrent = null
 let camera, scene, renderer, controls
 
 const ChinaMapChartV3 = (props) => {
     // 获取 DOM 节点，挂载 canvas
     const mapRef = useRef(null)
+    const tipRef = useRef(null)
 
     const init = () => {
         camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 0.01, 1000 )
@@ -44,14 +45,15 @@ const ChinaMapChartV3 = (props) => {
         mapRefCurrent.appendChild( renderer.domElement )
         mouseMove()
     }
-    const animate = () => {
-        requestAnimationFrame( animate )
-        render()
-    }
 
     const mouseMove = () => {
         controls = new OrbitControls(camera, renderer.domElement) //创建控件对象
         controls.addEventListener('change', render)
+    }
+
+    const animate = () => {
+        requestAnimationFrame( animate )
+        render()
     }
 
     const render = () => {
@@ -59,12 +61,16 @@ const ChinaMapChartV3 = (props) => {
         createStar(scene)
         setShining(scene, camera, renderer)
         setLighting()
+        setMoveSpot()
     }
+    
 
 	useEffect(() => {
         mapRefCurrent = mapRef.current
+        tipRefCurrent = tipRef.current
         init()
         setMapDom(mapJson.features, scene)
+        setRaycaster(scene, camera, mapRefCurrent, tipRefCurrent)
         animate()
         return () => {
             mapRefCurrent.innerHTML = ""
@@ -74,6 +80,23 @@ const ChinaMapChartV3 = (props) => {
 	return (
 		<div className="content-box2">
             <div className="mapRef" ref={mapRef}></div>
+            <div className="tipRef" ref={tipRef}>
+                <div className="content">
+                    <h1></h1>
+                    <p>
+                        <span>区域排名：</span>
+                        <span className="num"></span>
+                    </p>
+                    <p>
+                        <span>ad编号：</span>
+                        <span className="num"></span>
+                    </p>
+                    <p>
+                        <span>中心地带：</span>
+                        <span className="num"></span>
+                    </p>
+                </div>
+            </div>
 		</div>
 	)
 }

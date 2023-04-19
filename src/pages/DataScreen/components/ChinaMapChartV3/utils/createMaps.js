@@ -15,9 +15,11 @@ const params = {
     pointColor: '#4ec0e9'
 }
 
+// 边缘移动光线
 let currentPos = 0
-let pointSpeed = 10
+let pointSpeed = 6
 const circleYs = []
+const projects = {}
 
 const vertexShader = `
     attribute float aOpacity;
@@ -91,6 +93,7 @@ export const setMapDom = (e, scene) => {
                     projection(item.properties.center),
                     item.properties.name == '北京市' ? 'red' : item.properties.name == '上海市' ? 'yellow': '#4ec0e9',
                 )
+                projects[item.properties.name] = item.properties.center
                 scene.add(cylinder)
                 scene.add(circleY)
                 scene.add(circleY3)
@@ -100,7 +103,7 @@ export const setMapDom = (e, scene) => {
             cod = cod.length > 1 ? [[...cod]] : cod
 
             cod.forEach((polygon) => {
-                const line = lineDraw(polygon, 0xffffff)
+                const line = lineDraw(polygon, 0x92edff)
                 province.add(line)
 
                 // 用于保存多边形的形状
@@ -201,8 +204,15 @@ export const setMapDom = (e, scene) => {
         points1.scale.set(1, 1, 0.3)
         scene.add(points1)
 
-        let meshe = makeArcline()
+        let {mesh: meshe, aMesh: ameshe1} = makeArcline(projection(projects['北京市']), projection(projects['上海市']))
+        let  {mesh: meshe2, aMesh: ameshe2}  = makeArcline(projection(projects['北京市']), projection(projects['广东省']))
+        let  {mesh: meshe3, aMesh: ameshe3}  = makeArcline(projection(projects['广东省']), projection(projects['上海市']))
         scene.add(meshe)
+        scene.add(meshe2)
+        scene.add(meshe3)
+        scene.add(ameshe1)
+        scene.add(ameshe2)
+        scene.add(ameshe3)
 }
 
 const lineDraw = (polygon, color) => {
@@ -325,10 +335,12 @@ export const setLighting = () => {
 
 let colorHigh = new THREE.Color("rgb(33, 150, 243)")
 
-const makeArcline = () => {
-    const yHeight = 50
-    const point1 = new THREE.Vector3(50, 0, 0)
-    const point2 = new THREE.Vector3(-50, 0, 0)
+const makeArcline = (posStart, posEnd) => {
+    const [x1, y1, z1] = [...posStart, 3]
+    const [x2, y2, z2] = [...posEnd, 3]
+    const yHeight = 6
+    const point1 = new THREE.Vector3(x1, z1, y1)
+    const point2 = new THREE.Vector3(x2, z2, y2)
     const controlPoint = new THREE.Vector3(
         (point1.x + point2.x) / 2, 
         (point1.y + point2.y) / 2 + yHeight, 
@@ -356,17 +368,96 @@ const makeArcline = () => {
         colors[i * 4 + 3] = 1
     })
 
-    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 4))
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
 
     // 材质
     const material = new THREE.LineBasicMaterial({
         vertexColors: true, // 顶点着色
-        linewidth: 5,
+        linewidth: 5, // 理论上改变宽度的设置，实际上需要借助样本包模块来实现改变宽度
         transparent: true,
-        side: THREE.DoubleSide
+        side: THREE.DoubleSide,
     })
 
     const mesh = new THREE.Line(geometry, material)
+    const aMesh = moveSpot(curve)
+    return {mesh, aMesh}
+}
 
-    return mesh
+const moveSpots = []
+const moveSpot = (curve) => {
+    // 线上的移动物体
+    const aGeo = new THREE.BoxGeometry(0.4, 0.4, 0.4)
+    const aMater = new THREE.MeshPhongMaterial({ color: 0xff0000, side: THREE.DoubleSide })
+    const aMesh = new THREE.Mesh(aGeo, aMater)
+    // 保存曲线实例
+    aMesh.curve = curve
+    aMesh._s = 0
+    moveSpots.push(aMesh)
+    return aMesh
+}
+export const setMoveSpot = () => {
+    moveSpots.forEach( (mesh) => {
+        mesh._s += 0.006
+        let tankPosition = new THREE.Vector3()
+        tankPosition = mesh.curve.getPointAt(mesh._s % 1)
+        mesh.position.set(tankPosition.x, tankPosition.y, tankPosition.z)
+    })
+}
+
+let raycaster 
+let mouse
+export const setRaycaster = (scene, camera, mapRefCurrent, tipRefCurrent) => {
+    raycaster = new THREE.Raycaster()
+    mouse = new THREE.Vector2(0, 0)
+
+    const onMouseMove = (event) => {
+        mouse.x = (event.offsetX / mapRefCurrent.offsetWidth) * 2 - 1
+        mouse.y = -(event.offsetY / mapRefCurrent.offsetHeight) * 2 + 1
+
+        if (
+            event.clientX > mapRefCurrent.getBoundingClientRect().left &&
+            event.clientX < mapRefCurrent.getBoundingClientRect().right &&
+            event.clientY > mapRefCurrent.getBoundingClientRect().top &&
+            event.clientY < mapRefCurrent.getBoundingClientRect().bottom
+        ) {
+            tipRefCurrent.style.left = event.clientX + 'px'
+            tipRefCurrent.style.top = event.clientY + 'px'
+            aboutLastPick(scene, camera, tipRefCurrent)
+        }
+    }
+    window.addEventListener('mousemove', onMouseMove,true)
+}
+
+
+let lastPick
+const aboutLastPick = (scene, camera, tipRefCurrent) => {
+    raycaster.setFromCamera(mouse, camera)
+    const intersects = raycaster.intersectObjects(
+        scene.children,
+        true
+    )
+    if (lastPick) {
+        lastPick.object.material[0].color.set('#1e293b')
+        lastPick.object.material[1].color.set('#1e293b')
+    }
+    lastPick = null
+    lastPick = intersects.find(
+        (item) => item.object.material && item.object.material.length === 2
+    )
+    if (lastPick) {
+        lastPick.object.material[0].color.set(0x05e8fe)
+        lastPick.object.material[1].color.set(0x05e8fe)
+
+        const properties = lastPick.object.properties
+
+        if (properties.name) {
+            tipRefCurrent.childNodes[0].childNodes[0].textContent = properties.name
+            tipRefCurrent.childNodes[0].childNodes[1].childNodes[1].textContent = properties.childrenNum
+            tipRefCurrent.childNodes[0].childNodes[2].childNodes[1].textContent = properties.adcode
+            tipRefCurrent.childNodes[0].childNodes[3].childNodes[1].textContent = properties.center
+            tipRefCurrent.style.visibility = 'visible'
+        }
+    } else {
+        tipRefCurrent.style.visibility = 'hidden'
+    }
 }
