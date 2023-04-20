@@ -85,6 +85,7 @@
     "tailwindcss": "^3.0.2",
     "terser-webpack-plugin": "^5.2.5",
     "three": "^0.151.3",
+    "three-text2d": "^0.6.0",
     "web-vitals": "^2.1.4",
     "webpack": "^5.64.4",
     "webpack-dev-server": "^4.6.0",
